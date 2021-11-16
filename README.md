@@ -1,3 +1,44 @@
+##The plan
+.............
+
+#Purpose
+This is the ui for the student management system.
+This system is designed to maintain and cater for all the school problems.
+
+It is designed to be able to enhance teaching and learning at home and school.
+
+#Admin content
+The dashboard.
+	columns:
+	1. Welcome user
+	2. Give user the latest news on education via api
+	3. Use color cards to dipict {Total Students, Total Foriegn Students, Total Chritian Students, Total Muslim students,students owning, Students abscent for more than 3days,}
+	4. calender on the right
+	5. User details on the left.
+	2. List all students with prefectship
+	3. List all the staff and teachers
+
+Student Management
+	columns:
+	1. Use color cards to dipict {Total Students, Total Foriegn Students, Total Chritian Students, Total Muslim students,students owning, Students abscent for more than 3days,}
+	2. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

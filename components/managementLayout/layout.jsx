@@ -23,7 +23,7 @@ import { useState, useEffect } from "react";
 
 export default function Layout({ children }) {
     const isMobile = useMediaQuery("(max-width:700px)");
-    const [showMenu, setShowMenu] = useState();
+    const [showMenu, setShowMenu] = useState(false);
     const mTheme = createMuiTheme({
         palette: {
             type: "light",
@@ -49,7 +49,7 @@ export default function Layout({ children }) {
                 >
                     <Toolbar>
                         {isMobile ? (
-                            <div className="-ml-2 mr-3">
+                            <div className="-ml-6 mr-1">
                                 <IconButton
                                     color="inherit"
                                     onClick={() => setShowMenu(!showMenu)}
@@ -60,7 +60,7 @@ export default function Layout({ children }) {
                         ) : (
                             ""
                         )}
-                        <Typography variant="h3" className="flex-1">
+                        <Typography variant={isMobile ? "h6":"h3"} className="flex-1">
                             Management
                         </Typography>
                         <IconButton color="inherit">
@@ -69,18 +69,17 @@ export default function Layout({ children }) {
                     </Toolbar>
                 </AppBar>
                 <div className={Classes.appbarMargin} />
-                <Grid container>
-                    <Grid item xs={2}>
-                        <SideBar show={isMobile? showMenu: true} />
-                    </Grid>
-                    <Grid item xs={10}>
+                
                     <div>
-                        <Container maxWidth="lg" className="bg-red-10">
+                        <SideBar show={isMobile? showMenu: true} />
+                    </div>
+                    
+                    <div className={`${isMobile? "ml-9":"ml-40"}`}>
+                        <Container maxWidth="lg">
                             <div>{children}</div>
                         </Container>
                     </div>
-                    </Grid>
-                </Grid>
+                
             </ThemeProvider>
         </div>
     );

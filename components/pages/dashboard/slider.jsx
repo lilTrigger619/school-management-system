@@ -22,35 +22,43 @@ export default function SwiperComp(){
 				<SwiperSlide >
 					<Card className={` bg-red-500`}>
 					<CardActionArea>
-						<CardContent className={`text-center space-between bg-red-500`}
+						<CardContent className={`text-center space-between bg-green-400`}
 						>
-							<Typography variant="h2">¢2000</Typography>
-							<Typography>School fees</Typography>
+							<Typography variant="h2">17.2k</Typography>
+							<Typography>TOTAL NUMBER OF STUDENTS</Typography>
 						</CardContent>
 					</CardActionArea>
 					</Card>
 				</SwiperSlide>
 				<SwiperSlide>
 					<Card>
-						<CardContent className={`text-center space-between bg-yellow-500`}>
-							<Typography variant="h2">¢20</Typography>
-							<Typography>P.T.A Dues</Typography>
+						<CardContent className={`text-center space-between bg-yellow-400`}>
+							<Typography variant="h2">500</Typography>
+							<Typography>TOTAL NUMBER OF FORIEGN STUDENTS</Typography>
 						</CardContent>
 					</Card>
 				</SwiperSlide>
 				<SwiperSlide>
 					<Card>
 						<CardContent className={`text-center space-between bg-blue-500`}>
-							<Typography variant="h2">¢10</Typography>
-							<Typography>Club contributions</Typography>
+							<Typography variant="h2">8.5K</Typography>
+							<Typography>TOTAL NUMBER OF FEMALE STUDENTS</Typography>
 						</CardContent>
 					</Card>
 				</SwiperSlide>
 				<SwiperSlide>
 					<Card>
 						<CardContent className={`text-center space-between bg-pink-500`}>
-							<Typography variant="h2">¢500</Typography>
-							<Typography>Feeding fees</Typography>
+							<Typography variant="h2">8.7k</Typography>
+							<Typography>TOTAL NUMBER OF MALE STUDENTS</Typography>
+						</CardContent>
+					</Card>
+				</SwiperSlide>
+				<SwiperSlide>
+					<Card>
+						<CardContent className={`text-center space-between bg-indigo-500`}>
+							<Typography variant="h2">3</Typography>
+							<Typography>NUMBER OF INACTIVE STUDENTS</Typography>
 						</CardContent>
 					</Card>
 				</SwiperSlide>

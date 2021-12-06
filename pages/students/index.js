@@ -1,7 +1,6 @@
-
-import Layout from "../components/managementLayout/layout";
-import FlexCard from '../components/pages/students/flexCard';
+import Layout from "../../components/managementLayout/layout";
 import {Typography} from '@material-ui/core';
+import {Row1,Row2, Row3 } from '../../components/pages/students'
 
 export default function StudentsPage(){
 	return(
@@ -9,9 +8,9 @@ export default function StudentsPage(){
 		<Layout>
 			<div>
 				<Typography variant="h5" className="text-center">Students</Typography>
-
-
-				<FlexCard/>
+				<Row1 />	
+				<Row2 />
+				<Row3 />
 			</div>
 		</Layout>
 		</>

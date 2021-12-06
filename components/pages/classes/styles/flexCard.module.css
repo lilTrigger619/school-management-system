@@ -1,0 +1,11 @@
+.flexCardTypo {
+	background: rgba(0,0,0, .8);
+	padding: .7rem;
+	color: white;
+	position: relative;
+	bottom: 2.7rem;
+}
+.flexImage {
+	height: 22rem;
+	width: 100%;
+}

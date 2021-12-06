@@ -16,7 +16,7 @@ import {
 import Layout from "../components/managementLayout/layout";
 import SwiperComp from "../components/pages/dashboard/slider";
 import {useEffect,useState} from 'react';
-import staffApi from './api/staffData';
+import {DataPlaceHolder} from '../utils';
 import Link from 'next/link';
 import {StaffData, StudentData} from '../components/pages/dashboard/chartData';
 import CustomPie from '../components/pages/dashboard/piechart';
@@ -105,7 +105,7 @@ useEffect(()=>{
             </Grid>
 
 
-	   <Grid item xs={12}>
+	   <Grid item xs="12">
 	  	<CustomPie />
 	   </Grid>
            
@@ -130,7 +130,7 @@ useEffect(()=>{
                         </TableRow>
 	  		</TableHead>
                       <TableBody>
-	  		{staffApi.map((Cred, key)=>{
+	  		{DataPlaceHolder.map((Cred, key)=>{
 			return(
 				<TableRow className="hover:bg-grey-800">
 					<TableCell>{`${Cred.first_name} ${Cred.last_name}`}</TableCell>
@@ -185,7 +185,7 @@ useEffect(()=>{
                         </TableRow>
 	  		</TableHead>
                       <TableBody>
-	  		{staffApi.map((Cred, key)=>{
+	  		{DataPlaceHolder.map((Cred, key)=>{
 			return(
 				<TableRow className="hover:bg-grey-800">
 					<TableCell>{`${Cred.first_name} ${Cred.last_name}`}</TableCell>

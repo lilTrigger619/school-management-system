@@ -1,5 +1,7 @@
 import "../styles/globals.css";
-import {useEffect} from 'react';
+import { useEffect } from "react";
+import Store from "../components/ReduxStore";
+import { Provider } from "react-redux";
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
@@ -8,7 +10,11 @@ function MyApp({ Component, pageProps }) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
   }, []);
-  return <Component {...pageProps} />;
+  return (
+    <Provider store={Store}>
+      <Component {...pageProps} />
+    </Provider>
+  );
 }
 
 export default MyApp;

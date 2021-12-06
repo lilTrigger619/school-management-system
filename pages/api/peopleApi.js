@@ -1,4 +1,4 @@
-import staffApi from './staffData';
+import staffApi from '../../utils';
 
 
 export default async function handler(req,res){

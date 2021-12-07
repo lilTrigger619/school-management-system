@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { appendQuestion } from "./quizSlice";
+import Styles from "./Row4.module.css";
 
 export default function Row4() {
   const [ShowMultiple, setShowMultiple] = useState(false);
@@ -59,8 +60,6 @@ export default function Row4() {
 
   const QuestionFormSubmit = () => {
     if (SelectValue == "multiple") {
-
-
       console.log({
         Type: SelectValue,
         Question: Question,
@@ -70,7 +69,7 @@ export default function Row4() {
           `C. ${Answer_C}`,
           `D. ${Answer_D}`,
         ],
-        CorrectAnswer:CheckedAnswer_A
+        CorrectAnswer: CheckedAnswer_A
           ? Answer_A
           : CheckedAnswer_B
           ? Answer_B
@@ -78,11 +77,8 @@ export default function Row4() {
           ? Answer_C
           : CheckedAnswer_D
           ? Answer_D
-          : ""
-				,
-
+          : "",
       });
-
 
       Dispatch(
         appendQuestion({
@@ -93,10 +89,10 @@ export default function Row4() {
         })
       );
 
-			setCheckedAnswer_A(false);
-			setCheckedAnswer_B(false);
-			setCheckedAnswer_C(false);
-			setCheckedAnswer_D(false);
+      setCheckedAnswer_A(false);
+      setCheckedAnswer_B(false);
+      setCheckedAnswer_C(false);
+      setCheckedAnswer_D(false);
     } else {
       console.log({
         Type: SelectValue,
@@ -146,12 +142,12 @@ export default function Row4() {
                   </Typography>
                 </Grid>
 
-                <Grid item xs={12} className="flex ">
+                <Grid item xs={12} className="flex flex-col">
                   <Typography variant="body1">Question </Typography>
                   <textarea
                     cols="11"
                     rows="3"
-                    className="w-2/3 ml-4 p-4 border-2 border-gray-400 rounded-md"
+										className="sm:w-full md:w-2/3 ml-4 p-4 border-2 border-gray-400 rounded-md"
                     value={Question}
                     onChange={(e) => setQuestion(e.target.value)}
                   ></textarea>
@@ -160,14 +156,18 @@ export default function Row4() {
                 <Grid item xs={12}>
                   <Typography
                     gutterBottom
-                    variant="h5"
+                    variant="h6"
                     className="w-1/2 mx-auto"
                   >
                     Options
                   </Typography>
-									<div className={`w-2/3 `}>
+									<div className="w-full md:w-2/3 md:bg-red-500">
                     {/**obj A**/}
-                    <div className={`${CheckedAnswer_A?'bg-blue-400':''} flex justify-between items-center p-2 m-3`}>
+                    <div
+                      className={`${
+                        CheckedAnswer_A ? "bg-blue-400" : ""
+                      } flex justify-between w-full items-center p-2 m-3`}
+                    >
                       <input
                         type="checkbox"
                         checked={CheckedAnswer_A}
@@ -185,10 +185,22 @@ export default function Row4() {
                         value={Answer_A}
                         onChange={(e) => setAnswer_A(e.target.value)}
                       />
+                      <Typography
+                        variant="body1"
+                        className={`${
+                          CheckedAnswer_A ? Styles.disp : Styles.hidden
+                        }`}
+                      >
+                        Answer
+                      </Typography>
                     </div>
 
                     {/**obj B**/}
-                    <div className={`${CheckedAnswer_B?'bg-blue-400':''} flex justify-between items-center p-2 m-3`}>
+                    <div
+                      className={`${
+                        CheckedAnswer_B ? "bg-blue-400" : ""
+                      } flex justify-between items-center p-2 m-3`}
+                    >
                       <input
                         type="checkbox"
                         checked={CheckedAnswer_B}
@@ -206,10 +218,22 @@ export default function Row4() {
                         value={Answer_B}
                         onChange={(e) => setAnswer_B(e.target.value)}
                       />
+                      <Typography
+                        variant="body1"
+                        className={`${
+                          CheckedAnswer_B ? Styles.disp : Styles.hidden
+                        }`}
+                      >
+                        Answer
+                      </Typography>
                     </div>
 
                     {/**obj C**/}
-                    <div className={`${CheckedAnswer_C?'bg-blue-400':''} flex justify-between items-center p-2 m-3`}>
+                    <div
+                      className={`${
+                        CheckedAnswer_C ? "bg-blue-400" : ""
+                      } flex justify-between items-center p-2 m-3`}
+                    >
                       <input
                         type="checkbox"
                         checked={CheckedAnswer_C}
@@ -227,10 +251,22 @@ export default function Row4() {
                         value={Answer_C}
                         onChange={(e) => setAnswer_C(e.target.value)}
                       />
+                      <Typography
+                        variant="body1"
+                        className={`${
+                          CheckedAnswer_C ? Styles.disp : Styles.hidden
+                        }`}
+                      >
+                        Answer
+                      </Typography>
                     </div>
 
                     {/**obj D**/}
-                    <div className={`${CheckedAnswer_D?'bg-blue-400':''} flex justify-between items-center p-2 m-3`}>
+                    <div
+                      className={`${
+                        CheckedAnswer_D ? "bg-blue-400" : ""
+                      } flex justify-between items-center p-2 m-3`}
+                    >
                       <input
                         type="checkbox"
                         checked={CheckedAnswer_D}
@@ -248,6 +284,14 @@ export default function Row4() {
                         value={Answer_D}
                         onChange={(e) => setAnswer_D(e.target.value)}
                       />
+                      <Typography
+                        variant="body1"
+                        className={`${
+                          CheckedAnswer_D ? Styles.disp : Styles.hidden
+                        }`}
+                      >
+                        Answer
+                      </Typography>
                     </div>
                   </div>
                 </Grid>

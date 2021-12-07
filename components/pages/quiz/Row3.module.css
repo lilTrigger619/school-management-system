@@ -1,0 +1,16 @@
+.questionContainer {
+	max-height: 350px;
+	overflow-y: auto;
+	width: 100%;
+			
+}
+.removeButton{
+	display: flex;
+	justify-content: end;
+	align-items: center;
+	margin: 0;
+}
+.singleQuestionContainer {
+	word-wrap: break-word;
+	word-break: keep-all;
+}

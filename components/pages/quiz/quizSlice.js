@@ -19,8 +19,24 @@ const Slice = createSlice({
 				type: type,
 			})
 		},
+	
+		removeQuestion: (state,action)=>{
+			const id = action.payload.id
+
+			const FilteredQuestions = state.questions.filter((item,key)=>{
+				if (key == !id){
+					return item
+				} 
+			})
+
+			state.questions = FilteredQuestions;
+		},
+
+		removeAllQuestions: (state, action)=>{
+			state.questions = [];
+		}
   },
 });
 
 export default Slice.reducer;
-export const {appendQuestion} = Slice.actions;
+export const {appendQuestion, removeQuestion, removeAllQuestions} = Slice.actions;

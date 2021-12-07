@@ -1,0 +1,8 @@
+.disp{
+	font-style: italic;
+	color: gray;
+	display: flex;
+}
+.hidden{
+	visibility:hidden;
+}

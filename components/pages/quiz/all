@@ -1,0 +1,10 @@
+.questionContainer {
+	max-height: 200px;
+	overflow-y: auto;
+			
+}
+.removeButton{
+	display: flex;
+	justify-content: end;
+	align-items: center
+}

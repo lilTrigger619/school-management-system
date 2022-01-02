@@ -8,6 +8,13 @@
 	max-height: 100%;
 }
 
+.hideScroll::-webkit-scrollbar{
+	display: none;
+}
+.hideScroll{
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
 
 
 @media (max-width: 670px){

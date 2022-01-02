@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { appendQuestion } from "./quizSlice";
 import Styles from "./Row4.module.css";
+import {uuid} from 'uuidv4';
 
 export default function Row4() {
   const [ShowMultiple, setShowMultiple] = useState(false);
@@ -61,6 +62,7 @@ export default function Row4() {
   const QuestionFormSubmit = () => {
     if (SelectValue == "multiple") {
       console.log({
+				id: uuid(),
         Type: SelectValue,
         Question: Question,
         Answers: [
@@ -78,10 +80,12 @@ export default function Row4() {
           : CheckedAnswer_D
           ? Answer_D
           : "",
+				
       });
 
       Dispatch(
         appendQuestion({
+					id: uuid(),
           type: SelectValue,
           question: Question,
           options: [Answer_A, Answer_B, Answer_C, Answer_D],
@@ -102,6 +106,7 @@ export default function Row4() {
 
       Dispatch(
         appendQuestion({
+					id: uuid(),
           question: Question,
           answer: CorrectAnswer,
           type: SelectValue,
@@ -161,12 +166,12 @@ export default function Row4() {
                   >
                     Options
                   </Typography>
-									<div className="w-full md:w-2/3 md:bg-red-500">
+									<div className="w-full md:w-2/3 ">
                     {/**obj A**/}
                     <div
                       className={`${
                         CheckedAnswer_A ? "bg-blue-400" : ""
-                      } flex justify-between w-full items-center p-2 m-3`}
+                      } flex justify-between items-center p-2 m-3`}
                     >
                       <input
                         type="checkbox"

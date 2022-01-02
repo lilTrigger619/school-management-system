@@ -16,7 +16,7 @@ import Link from "next/link";
 export default function SideBar({ show }) {
   const Classes = useStyles();
   return (
-    <Drawer variant="permanent">
+	  <Drawer variant="permanent" className={css.hideScroll}>
       <List className="p-5">
         <ListItem className={`${Classes.appbarMargin} -mx-2`} />
 
@@ -56,7 +56,7 @@ export default function SideBar({ show }) {
           </ListItem>
         </Link>
 
-        <Link href="exams">
+        <Link href="quiz">
           <ListItem className="my-4 -mx-2 hover:bg-gray-200 cursor-pointer">
             <Description className={`${show ? "-ml-.5 mr-2" : "p-1"}`} />{" "}
             <Typography variant="body1" className={show ? "flex" : "hidden"}>

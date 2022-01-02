@@ -11,8 +11,10 @@ const Slice = createSlice({
 			const question = action.payload.question
 			const answer = action.payload.answer
 			const type= action.payload.type
+			const id = action.payload.id
 
 			state.questions.push({
+				id : id,
 				question: question,
 				options: options,
 				answer: answer,
@@ -23,17 +25,16 @@ const Slice = createSlice({
 		removeQuestion: (state,action)=>{
 			const id = action.payload.id
 
-			const FilteredQuestions = state.questions.filter((item,key)=>{
-				if (key == !id){
-					return item
-				} 
+			const FilteredQuestions = state.questions.filter((item)=>{
+				if (item.id != id) return item
 			})
 
 			state.questions = FilteredQuestions;
 		},
 
 		removeAllQuestions: (state, action)=>{
-			state.questions = [];
+			const Empty = [];
+			state.questions = Empty; 
 		}
   },
 });

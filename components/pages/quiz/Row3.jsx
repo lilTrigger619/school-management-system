@@ -1,22 +1,23 @@
 import { Grid, CardContent, Card, Typography, Button } from "@material-ui/core";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import Styles from "./Row3.module.css";
-import {removeQuestion, removeAllQuestions} from './quizSlice.js';
+import { removeQuestion, removeAllQuestions } from "./quizSlice.js";
+import {uuid} from 'uuidv4';
 
 export default function Row3(props) {
   const Questions = useSelector((state) => state.questions);
   const [Quest, setQuestions] = useState([]);
-	const Dispatch = useDispatch();
+  const Dispatch = useDispatch();
 
-	const RemoveQuestionHandler = (key)=>{
-		console.log(key)
-		Dispatch(removeQuestion(key));
-	}
-	
-	const RemoveAllQuestionsHandler = ()=>{
-		Dispatch(removeAllQuestions);	
-	}
+  const RemoveQuestionHandler = (id) => {
+    console.log(id);
+    Dispatch(removeQuestion({id}));
+  };
+
+  const RemoveAllQuestionsHandler = () => {
+    Dispatch(removeAllQuestions());
+  };
 
   useEffect(() => {
     let RenderQuestion = Questions.questions.map((question, key) => {
@@ -27,7 +28,12 @@ export default function Row3(props) {
             className={`bg-yellow-100 p-3 m-3 ${Styles.singleQuestionContainer}`}
           >
             <div className={Styles.removeButton}>
-							<Button variant="contained" size="small" color="secondary" onClick={() =>RemoveQuestionHandler(key)}>
+              <Button
+                variant="contained"
+                size="small"
+                color="secondary"
+                onClick={() => RemoveQuestionHandler(question.id)}
+              >
                 Remove
               </Button>
             </div>
@@ -68,7 +74,12 @@ export default function Row3(props) {
             className={`bg-yellow-100 p-3 m-3 ${Styles.singleQuestionContainer}`}
           >
             <div className={Styles.removeButton}>
-							<Button variant="contained" size="small" color="secondary" onClick={() =>RemoveQuestionHandler(key)}>
+              <Button
+                variant="contained"
+                size="small"
+                color="secondary"
+                onClick={() => RemoveQuestionHandler(question.id)}
+              >
                 Remove
               </Button>
             </div>
@@ -83,7 +94,6 @@ export default function Row3(props) {
     setQuestions(RenderQuestion);
   }, [Questions]);
 
-  console.log({ questions: Questions.questions, Quest: Quest });
   return (
     <>
       <div className="my-5">
@@ -96,12 +106,13 @@ export default function Row3(props) {
               </Typography>
             ) : (
               <div>
+								<Typography variant="h5" className="w-full text-center">Questions</Typography>
                 <div className={Styles.questionContainer}>{Quest}</div>
                 <Button
                   variant="contained"
                   color="secondary"
                   className="w-full"
-									onClick={RemoveAllQuestionsHandler}
+                  onClick={RemoveAllQuestionsHandler}
                 >
                   Clear All
                 </Button>

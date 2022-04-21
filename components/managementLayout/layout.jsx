@@ -40,7 +40,7 @@ import AuthContext from "../globals/authContext";
 export default function Layout({ children }) {
   const dispatch = useDispatch();
   const [Load, setLoad] = useState(true);
-  const isMobile = useMediaQuery("(max-width:700px)");
+  const isMobile = useMediaQuery("(max-width:1259px)");
   const [showMenu, setShowMenu] = useState(false);
   const mTheme = createTheme({
     palette: {
@@ -86,7 +86,7 @@ export default function Layout({ children }) {
             <AppBar className={Classes.aboveDrawer} position="fixed">
               <Toolbar>
                 {isMobile ? (
-                  <div className="-ml-6 mr-1">
+                  <div className="ml-6 mr-1">
                     <IconButton
                       color="inherit"
                       onClick={() => sidebarRef.current.toggleSidebar()}
@@ -122,7 +122,7 @@ export default function Layout({ children }) {
               <SideBar ref={sidebarRef} />
             </div>
 
-            <div className={`${isMobile ? "ml-9" : "ml-40"}`}>
+            <div className={`${isMobile ? "" : "ml-40"}`}>
               <Container maxWidth="md">
                 <div style={ContentStyle}>
                   {children}

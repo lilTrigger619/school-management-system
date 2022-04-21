@@ -89,7 +89,8 @@ const ShortcutLink = ({ title, to }) => {
 //{ links, title, linkOnly }
 export default forwardRef(
   function Sidebar(props, ref) {
-    const isMobile = useMediaQuery("(max-width:43rem)");
+    const isMobile = useMediaQuery("(max-width:1259px)");
+		console.log("is mobile", isMobile);
     const muiStyles = useStyles();
     const [toggleState, setToggle] = useState(false);
 
@@ -103,7 +104,7 @@ export default forwardRef(
 
     return (
       <Drawer
-        variant={isMobile != undefined ? "temporary" : "permanent"}
+        variant={isMobile ? "temporary" : "permanent"}
         className={muiStyles["DrawerContainer"]}
         open={toggleState}
         onClose={() => setToggle(false)}

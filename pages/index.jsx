@@ -15,253 +15,164 @@ import {
 } from "@material-ui/core";
 import Layout from "../components/managementLayout/layout";
 import SwiperComp from "../components/pages/dashboard/slider";
-import {useEffect,useState} from 'react';
-import {DataPlaceHolder} from '../utils';
-import Link from 'next/link';
-import {StaffData, StudentData} from '../components/pages/dashboard/chartData';
-import CustomPie from '../components/pages/dashboard/piechart';
+import { useEffect, useLayoutEffect, useState } from "react";
+import StudentTable from "../components/pages/dashboard/studentTable";
+import Link from "next/link";
+import Image from "next/image";
+import CustomPie from "../components/pages/dashboard/piechart";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  load,
+  stop_loading,
+  setLogout,
+} from "../components/pages/login/loginSlice";
+import axios from "axios";
+import { useRouter } from "next/router";
+import NoticeBoard from "../components/pages/dashboard/noticeBoard";
+import Context from "../components/pages/dashboard/Context";
 
+export default function Homepage({ at}) {
+  const [greetings, setGreetings] = useState();
+  const user = useSelector((state) => state.DashboardData.user);
+  const dataArrived = useSelector((state) => state.DashboardData.dataArrived);
+  const StaffTableData = useSelector(
+    (state) => state.DashboardData.tableData.staffTablewn
+  );
+  const StudentTableData = useSelector(
+    (state) => state.DashboardData.tableData.studentTable
+  );
+  const dispatch = useDispatch();
+  const TableHead = ["Name", "Email", "Position", "Subject", "Grade", "Status"];
+  //after data has arrived from the backend.
+  useEffect(async () => {
+    if (dataArrived) {
+      dispatch(stop_loading());
+    } else {
+      dispatch(load());
+    }
+  }, [dataArrived]);
 
-export default function Homepage() {
-/**
-
-const [DataArrived, setDataArived]=useState(false)
-const [Staff, setStaff] = useState('null')
-
-const fetcher = async () =>{
-  const raw = await fetch('api/peopleApi', {method:"GET"})
-  const info = await raw.json();
-	if(info){
-		setStaff(info.data);
-		console.log(Staff);
-	}
-}
-
-
-
-useEffect(()=>{
-	fetch('api/peopleApi', {method:"GET"})
-		.then((response)=>response.json())
-		.then((data)=>setStaff(data))
-		.then(()=>console.log(Staff))
-
-},[Staff])
- *
- *
- * **/
-
+  useLayoutEffect(() => {
+    let time = new Date();
+    setGreetings(
+      time.getHours() <= 1
+        ? "Dawn"
+        : time.getHours() <= 11
+        ? "Morning"
+        : time.getHours() <= 17
+        ? "Afternoon"
+        : time.getHours() <= 21
+        ? "Evening"
+        : time.getHours() > 21
+        ? "Night"
+        : "Day"
+    );
+    console.log("this is the homepag" );
+  }, []);
 
   return (
     <>
-	
       <Layout>
-        <div className=" my-8">
-          <Grid container justifyContent="center" spacing={4}>
-            <Grid item sm={12} md={4}>
-              <div>
-                <Typography variant="h3" gutterBottom>
-                  Welcome Shadrack,
-                </Typography>
-                <Typography variant="body2" gutterBottom>
-                  Good Morning
-                </Typography>
-              </div>
-            </Grid>
-
-            <Grid item sm={12} md={8}>
-              <Card>
-                <CardHeader title="Quote of the day" subheader="Quote:" />
-                <CardContent>
-                  <Typography variant="body1">
-                    {" "}
-                    " When someone says you can't, do it twice and take pictures
-                    "
+        <Context>
+          <div className=" my-8">
+            <Grid container justifyContent="center" spacing={4}>
+              <Grid item sm={12} md={4}>
+                <div>
+                  <Typography variant="h3" gutterBottom>
+                    Welcome {user.first_name ?? "$user"}
                   </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            <Grid item xs={12}>
-              <Card>
-                <CardHeader
-                  title="Latest News"
-                  subheader="Attendence"
-                  className={`flex`}
-                />
-                <CardContent>
-                  <Typography variant="body1">
-                    {" "}
-                    Please every student should do well to come to schoole early
-                    comming Monday to prevent any punishment
+                  <Typography variant="body2" gutterBottom>
+                    Good {greetings}
                   </Typography>
-                </CardContent>
-              </Card>
+                </div>
+              </Grid>
+
+              {/*Daily quote from an external API*/}
+              <Grid item sm={12} md={8}>
+                <Card>
+                  <CardHeader title="Quote of the day" subheader="Quote:" />
+                  <CardContent>
+                    <Typography variant="body1">
+                      {" "}
+                      " When someone says you can't, do it twice and take
+                      pictures "
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              <Grid item xs={12}>
+                {/*notice board*/}
+                <Card>
+                  <CardHeader subheader="News" />
+                  <CardContent>
+                    <NoticeBoard />
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              <Grid item xs={12}>
+                <div>
+                  <SwiperComp />
+                </div>
+              </Grid>
+
+              <Grid item xs="12">
+                <CustomPie />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                {/*Grid to contain userimage and user login details*/}
+                <Card>
+                  <CardContent className={`
+                        flex
+                        justify-center
+                      `}>
+                    <Image
+                      src="/001_a.png"
+                      width={240}
+                      height={240}
+                      className={`
+                        rounded-full 
+                      `}
+                    />
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                {/*login details: last date of login, last time of login name of device browser name*/}
+                <Card>
+                  <CardContent>
+                      <div className="p-6">
+                      <div className="flex justify-between">
+                          <Typography variant="body1" gutterBottom>First name :</Typography>
+                        <Typography variant="body1" gutterBottom>{`${user.first_name ? user.first_name : 'Unkown'}`}</Typography>
+                      </div>
+                      <div className="flex justify-between">
+                          <Typography variant="body1" gutterBottom>Last name :</Typography>
+                        <Typography variant="body1" gutterBottom>{`${user.last_name ? user.last_name : 'Unknown'}`}</Typography>
+                      </div>
+                      <div className="flex justify-between">
+                          <Typography variant="body1" gutterBottom>Position:</Typography>
+                        <Typography variant="body1" gutterBottom>{`${user.position ? user.position : 'Unkown'}`}</Typography>
+                      </div>
+                      <div className="flex justify-between">
+                          <Typography variant="body1" gutterBottom>Account-Type:</Typography>
+                          <Typography variant="body1" gutterBottom>Administrator</Typography>
+                      </div>
+                      <div className="flex justify-between">
+                          <Typography variant="body1" gutterBottom>Last login:</Typography>
+                          <Typography variant="body1" gutterBottom>Unknown</Typography>
+                      </div>
+                          </div>
+                  </CardContent>
+                </Card>
+              </Grid>
             </Grid>
-
-            <Grid item xs={12}>
-              <div>
-                <SwiperComp />
-              </div>
-            </Grid>
-
-
-	   <Grid item xs="12">
-	  	<CustomPie />
-	   </Grid>
-           
-            <Grid item xs={12}>
-              <Card>
-	  	<CardContent className="flex justify-center">
-	  		<Typography variant="h6">Staff</Typography>	
-	  	</CardContent>
-                <Grid container justifyContent="space-around">
-	  		
-	  	<div className="max-w-full max-h-sm  overflow-auto">
-                  <Grid item xs={12} md={8}>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Name</TableCell>
-                          <TableCell>Email</TableCell>
-                          <TableCell>Position</TableCell>
-                          <TableCell>Subject</TableCell>
-                          <TableCell>Grade</TableCell>
-                          <TableCell>Status</TableCell>
-                        </TableRow>
-	  		</TableHead>
-                      <TableBody>
-	  		{DataPlaceHolder.map((Cred, key)=>{
-			return(
-				<TableRow className="hover:bg-grey-800">
-					<TableCell>{`${Cred.first_name} ${Cred.last_name}`}</TableCell>
-					<TableCell>{`${Cred.email}`}</TableCell>
-					<TableCell>{`${Cred.position}`}</TableCell>
-					<TableCell>{`${Cred.subject}`}</TableCell>
-					<TableCell>{`${Cred.grade}`}</TableCell>
-					<TableCell>Active</TableCell>
-					
-				</TableRow>
-
-			)	
-			}) 
-			 }
-
-                      </TableBody>
-                    </Table>
-			
-                  </Grid>
-	  	
-	  	<Grid item xs={12} className="bg-blue-200 flex justify-center cursor-pointer">
-	  		<Link href="instructor">
-				<Typography>See more</Typography>
-	  		</Link>
-	  	</Grid>
-	  	</div>
-                </Grid>
-              </Card>
-            </Grid>
-
-
-
-
-            <Grid item xs={12}>
-              <Card>
-	  	<CardContent className="flex justify-center">
-	  		<Typography variant="h6">Students</Typography>	
-	  	</CardContent>
-                <Grid container justifyContent="space-around">
-	  		
-	  	<div className="max-w-full max-h-sm  overflow-auto">
-                  <Grid item xs={12} md={8}>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Name</TableCell>
-                          <TableCell>Email</TableCell>
-                          <TableCell>Position</TableCell>
-                          <TableCell>Subject</TableCell>
-                          <TableCell>Grade</TableCell>
-                          <TableCell>Status</TableCell>
-                        </TableRow>
-	  		</TableHead>
-                      <TableBody>
-	  		{DataPlaceHolder.map((Cred, key)=>{
-			return(
-				<TableRow className="hover:bg-grey-800">
-					<TableCell>{`${Cred.first_name} ${Cred.last_name}`}</TableCell>
-					<TableCell>{`${Cred.email}`}</TableCell>
-					<TableCell>{`${Cred.position}`}</TableCell>
-					<TableCell>{`${Cred.subject}`}</TableCell>
-					<TableCell>{`${Cred.grade}`}</TableCell>
-					<TableCell>Active</TableCell>
-					
-				</TableRow>
-
-			)	
-			}) 
-			 }
-
-                      </TableBody>
-                    </Table>
-			
-                  </Grid>
-	  	
-	  	<Grid item xs={12} className="bg-blue-200 flex justify-center cursor-pointer">
-	  		<Link href="instructor">
-				<Typography>See more</Typography>
-	  		</Link>
-	  	</Grid>
-	  	</div>
-                </Grid>
-              </Card>
-            </Grid>
-          </Grid>
-        </div>
+          </div>
+        </Context>
       </Layout>
     </>
   );
 }
 
-//getStaticProps Only supports relative and real life urls from an external api.
-
-/*export async function getStaticProps(){
-  const fetched = await fetch('https://localhost:3000/api/peopleApi');
-  const data = await raw.json();
-
-  return {
-    props:{
-      data,
-    }
-  }
-}
-*/
-
-/*
-	{(Staff !== null) ? Staff.map((_,index)=>{
-		  return(
-		    <TableRow>
-		      <TableCell>
-		       {index.first_name +" " + index.last_name}
-		      </TableCell>
-		      <TableCell>
-			index.email
-		      </TableCell>
-		      <TableCell>
-			{index.position}
-		      </TableCell>
-		     <TableCell>
-			{index.subject}
-		      </TableCell>
-		     <TableCell>
-			{index.grade}
-		      </TableCell>
-		     <TableCell>
-			Active
-		      </TableCell>
-		    </TableRow>
-		    )
-		}): "NO content"}
- * */
-
-/*
- * */

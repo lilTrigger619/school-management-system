@@ -1,0 +1,81 @@
+import Axios from "axios";
+import { Request, RefreshToken } from "./funcs";
+import cookie from "cookie";
+
+export default async (req, res) => {
+  let basicStaffData, basicStudentData, basicRefreshStaff, basicRefreshStudent;
+  const TheRequest = req;
+  //the access cookie to make the user request.
+  const Cookie = cookie.parse(req.headers.cookie);
+  console.log("[Preparing Access Token] ...");
+  const { access, refresh } = Cookie;
+  console.log("[Preparing Access Token] Ok");
+  if (req.method == "GET") {
+    //getting  basic staff data.
+    //this should be added after the if and else check
+    //
+    const Data = {
+      accessToken: access,
+      url: "/staff/basic/",
+    };
+    console.log("[Getting Basic Staff Data] ...");
+    const ApiRes = await Request(Data);
+    if (ApiRes.status == 200) {
+      console.log("[Getting Basic Staff Data] Ok]");
+      basicStaffData = ApiRes.data;
+    } else {
+      console.log("[Getting All Staff Data] Error");
+      const RefreshRes = await RefreshToken(
+        cookie,
+        req,
+        res,
+        refresh,
+        Request,
+        Data
+      );
+      res = await RefreshRes.res;
+      if (RefreshRes.Response.status == 200) {
+        basicStaffData = RefreshRes.Response.data;
+      } else {
+        res.status(500).json("Logout");
+      }
+    }
+
+    //getting basic student data for populating the table
+    const StudentBasicData = {
+      accessToken: access,
+      url: "/student/",
+    };
+    console.log("[Getting Basic Student Data] ...");
+    const StudentApiRes = await Request(StudentBasicData);
+    if (StudentApiRes.status == 200) {
+      console.log("[Getting Basic Student Data] Ok");
+      basicStudentData = await StudentApiRes.data;
+      console.log("[Sending Student Basic Data to Client]");
+      res.status(200).json({
+        basicStaffData,
+        basicStudentData,
+      });
+    } else {
+      console.log("[Getting Basic Student Data] Failed");
+      const StudentRefreshRes = await RefreshToken(
+        cookie,
+        req,
+        res,
+        refresh,
+        Request,
+        StudentBasicData
+      );
+      res = await StudentRefreshRes.res;
+      if (StudentRefreshRes.Response.status == 200) {
+        console.log("[Sending All Data to Client] ...");
+        basicStudentData = await StudentRefreshRes.Response.data;
+        console.log("[Sending All Data to Client] Ok");
+        res.status(200).json({
+          basicStaffData,
+          basicStudentData,
+        });
+      }
+    }
+  }
+};

@@ -1,0 +1,356 @@
+import Layout from "../components/managementLayout/layout";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import axios from 'axios';
+import { S_input } from "../components/pages/register";
+import { useState, useEffect } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+
+export default function Register() {
+  const Styles = useStyles();
+
+  //error messages will be setted when there is an error.
+  const [errorMessage, setErrorMessage] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    gender: "",
+    username: "",
+  });
+
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
+    date_of_birth: "",
+    phone: "",
+    illness: "",
+    disability: "",
+    position: "",
+    photo: "",
+    username: "",
+    subject: "",
+    location: "",
+    gender: "",
+  });
+
+  const {
+    username,
+    first_name,
+    last_name,
+    email,
+    password,
+    date_of_birth,
+    phone,
+    illness,
+    disability,
+    position,
+    photo,
+    location,
+    gender,
+  } = formData;
+
+  const onChangeHandler = async (e) => {
+    if (e.target.name == "photo") {
+			console.log('the event', e)
+      setFormData({ ...formData, ["photo"]: e.target.files[0] });
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
+  };
+
+  const onSubmit = async (e) => {
+    const err = await validate(formData);
+    //setting error value to state if present
+		
+    setErrorMessage(err);
+    setErrorMessage(err);
+    console.log("state", errorMessage);
+
+    //scrollup when there is an error in the form
+    if (
+			err.first_name||
+			err.last_name||
+			err.username||
+			err.email
+			/**
+			//this makes it wired scince on first
+			//click of the submit nothing happens
+			//but renders on the second click
+      errorMessage.first_name ||
+      errorMessage.last_name ||
+      errorMessage.username ||
+      errorMessage.email 
+			 **/
+    ) {
+      if (typeof window !== "undefined") {
+				console.log('we got here')
+        return (window.document.documentElement.scrollTop = 0);
+      }
+    }else{
+				console.log('data', date_of_birth)
+				let formBody = new FormData();
+				formBody.append('first_name', first_name)
+				formBody.append('last_name', last_name)
+				formBody.append('email', email)
+				formBody.append('username', username)
+				formBody.append('date_of_birth', date_of_birth)
+				formBody.append('phone', phone)
+				formBody.append('location', location)
+				formBody.append('disability', disability)
+				formBody.append('illness', illness)
+				formBody.append('gender', gender)
+				formBody.append('photo', photo)
+				formBody.append('password', 'qqw')
+				const url = 'http://localhost:8000/staff/register/'
+				axios.post(url, formBody, {
+					headers: { "Content-Type": "multipart/form-data" },
+				}).then(res =>{
+				console.log('response', res);
+				}).catch(err=>console.log(err))
+		}
+		 
+  };
+  return (
+    <>
+      <Layout>
+        <div className={Styles.pageStyle}>
+          <Typography className="mb-6 p-3 flex justify-start" variant="h4">
+            Register Staff
+          </Typography>
+          <br />
+          <div className={`${Styles.form} mx-1 p-5`}>
+            <S_input
+              label="First name*"
+              placeholder="First name"
+              onChange={onChangeHandler}
+              name="first_name"
+              type="text"
+              helperText={errorMessage.first_name}
+              error={errorMessage.first_name ? true : false}
+            />
+            <S_input
+              label="Last name"
+              placeholder="Last name"
+              value={last_name}
+              onChange={onChangeHandler}
+              name="last_name"
+              type="text"
+              helperText={errorMessage.last_name}
+              error={errorMessage.last_name ? true : false}
+            />
+            <S_input
+              label="Date of birth"
+              value={date_of_birth}
+              onChange={onChangeHandler}
+              name="date_of_birth"
+              type="date"
+              InputLabelProps={{ shrink: true }}
+            />
+            <S_input
+              label="Username"
+              placeholder="Username"
+              value={username}
+              name="username"
+              type="text"
+              onChange={onChangeHandler}
+              helperText={errorMessage.username}
+              error={errorMessage.username ? true : false}
+            />
+            <S_input
+              label="Email"
+              placeholder="Email"
+              value={email}
+              onChange={onChangeHandler}
+              name="email"
+              type="email"
+              helperText={errorMessage.email}
+              error={errorMessage.email ? true : false}
+            />
+            <S_input
+              label="Phone"
+              placeholder="Phone"
+              name="phone"
+              value={phone}
+              type="text"
+              onChange={onChangeHandler}
+            />
+            <S_input
+              label="Location"
+              placeholder="Location"
+              name="location"
+              value={location}
+              type="text"
+              onChange={onChangeHandler}
+            />
+            <S_input
+              label="Disability"
+              placeholder="Disability"
+              name="disability"
+              value={disability}
+              type="text"
+              onChange={onChangeHandler}
+            />
+            <S_input
+              label="Illness"
+              placeholder="Illness"
+              name="Illness"
+              value={illness}
+              onChange={onChangeHandler}
+              type="text"
+            />
+
+            {/**other input fields**/}
+            <div
+              className={`${Styles.otherInputs} ${
+                errorMessage.gender ? Styles.genderError : ""
+              } `}
+            >
+              <Typography variant="body1" className="text-center">
+                Gender :
+              </Typography>
+              <div className="flex justify-around items-center">
+                <div className="flex items-center">
+                  <Typography variant="body2"> Male </Typography>
+                  <input
+                    type="radio"
+                    name="gender"
+                    value='mal'
+                    onChange={onChangeHandler}
+                    title="Male"
+                    className="mx-5"
+                  />
+                </div>
+
+                <div className="flex items-center">
+                  <Typography variant="body2"> Female </Typography>
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="fem"
+                    onChange={onChangeHandler}
+                    title="Female"
+                    className="mx-5"
+                  />
+                </div>
+              </div>
+              <div className="mt-3 border-t flex justify-center">
+                <Typography
+                  variant="caption"
+                  className=" text-center mx-auto mt-2 w-full"
+                >
+                  {errorMessage.gender ?? ""}
+                </Typography>
+              </div>
+            </div>
+            <S_input
+              label="Password"
+              placeholder="Placeholder"
+              name="password"
+              onChange={onChangeHandler}
+              title="password"
+              value={password}
+              inputProps={{ readOnly: true }}
+            />
+            <div className={Styles.otherInputs}>
+              <Typography gutterBottom variant="caption">
+                Passwords are auto generated for the user with the firstname and
+                a random number
+              </Typography>
+            </div>
+
+            <div
+              className={`${Styles.otherInputs} 
+							border-2 
+							rounded-md
+							border-solid 
+							border-black-500 
+							my-10 
+							p-5
+							flex 
+							items-center 
+							bg-gray-200
+							justify-between`}
+            >
+              <Typography variant="caption"> Photo</Typography>
+              <input type="file" accept='image/*' name='photo' onChange={onChangeHandler} />
+            </div>
+
+            <div className={`${Styles.otherInputs} my-10`}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={onSubmit}
+                color="primary"
+              >
+                Submit Data
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    </>
+  );
+}
+
+const useStyles = makeStyles((theme) => {
+  return {
+    form: {
+      background: theme.palette.background.default,
+      borderRadius: ".7rem",
+    },
+    pageStyle: {
+      width: "100%",
+      minHeight: "100vh",
+    },
+    otherInputs: {
+      maxWidth: "23rem",
+      margin: "auto",
+      marginTop: ".9rem",
+    },
+    genderError: {
+      color: theme.palette.error.light,
+      border: "1px solid "+theme.palette.error.light,
+      borderRadius: "19px",
+    },
+  };
+});
+
+const validate = (data) => {
+  const { first_name, last_name, gender, email, username } = data;
+  //a variable can be created at the beggining of the page
+  //then later assigned with the value of all usernames and emails
+  //to perfom checks on whether they are unique.
+  const error = {
+    first_name: "",
+    last_name: "",
+    gender: "",
+    email: "",
+    username: "",
+  };
+  if (!first_name.trim()) {
+    //first_name is empty
+    error.first_name = "First name field should not be empty!";
+  }
+  if (!last_name.trim()) {
+    //last_name is empty
+    error.last_name = "Last name field should not be left empty!";
+  }
+  if (!gender.trim()) {
+    //gender is empty
+    error.gender = "Select a sex!";
+  }
+  if (!email.trim()) {
+    //email is empty
+    error.email = "Provide an email!";
+  }
+  if (!username.trim()) {
+    //username is empty
+    error.username = "Username is mandatory!";
+  }
+
+  return error;
+};

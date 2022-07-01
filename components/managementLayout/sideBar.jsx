@@ -10,6 +10,7 @@ import {
   Group,
   AccountBalance,
   PostAdd,
+	Add,
 } from "@material-ui/icons";
 import Link from "next/link";
 
@@ -74,11 +75,11 @@ export default function SideBar({ show }) {
           </ListItem>
         </Link>
 
-        <Link href="/calender">
+        <Link href="/register">
           <ListItem className="my-4 -mx-2 hover:bg-gray-200 cursor-pointer">
-            <Today className={`${show ? "-ml-.5 mr-2" : "p-1"}`} />{" "}
+            <Add className={`${show ? "-ml-.5 mr-2" : "p-1"}`} />{" "}
             <Typography variant="body1" className={show ? "flex" : "hidden"}>
-              Calender
+              Add / Edit
             </Typography>
           </ListItem>
         </Link>

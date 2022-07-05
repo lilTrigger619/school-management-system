@@ -39,9 +39,12 @@ const symbols = [
 const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 //validating username, firstname, lastname, and otheranem;
-const normalValidate = (data, { username, usernameData }) => {
+const normalValidate = (data,  username, usernameData ) => {
+  username = username ?? "";
+  usernameData = usernameData ?? [];
+
   let Err = "";
-  if (data != "") {
+  if (data == "" || data == undefined ) {
     Err = "This field cannot be left empty!";
   } else if (data.length < 3) {
     Err = "Minimum required length is 3";
@@ -62,7 +65,9 @@ const dateValidate = (date) => {
   let Err = "";
   const nowDate = new Date();
   const birthDate = new Date(date);
-  if (nowDate.getFullYear() < birthDate.getFullYear()) {
+  if(date == undefined || date == ""){
+    Err = "This field connot be left empty!";
+  }else if (nowDate.getFullYear() < birthDate.getFullYear()) {
     Err = "Invalide date";
   }
   return Err;
@@ -74,12 +79,13 @@ const emailValidate = (email) => {
   if (emailPattern.test(email)) {
     Err = "Invalid email pattern";
   }
+  return Err;
 };
 
 const containesOne = (value, items) => {
   let response = false;
   for (let i = 0; i < items.length; i++) {
-    if (value.indexOf(items[i].toLowerCase()) == -1) {
+    if (value.indexOf(items[i]) != -1) {
       response = true;
       break;
     }

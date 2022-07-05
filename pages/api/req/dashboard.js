@@ -34,7 +34,7 @@ export default async (req, res) => {
             : "Internal server err",
         status: StudentResponse.status ?? 500,
       };
-      _Response(data);
+      _Response(data.res, data.status, data.data, data.consoleData);
     } else {
       let data = {
         console: [
@@ -45,7 +45,7 @@ export default async (req, res) => {
         data: StaffResponse.data ?? "Internal server err",
         status: StaffResponse.status ?? 500,
       };
-      _Response(data);
+      _Response(data.res, data.status, data.data, data.console);
     }
   }
 };

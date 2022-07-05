@@ -6,15 +6,19 @@ const Slice = createSlice({
     submitForm: false,
     validate: {
       validating: false,
-      validateForm1: {isValid:false, validate:false},
-      validateForm2: {isValid:false, validate:false},
-      validateForm3: {isValid:false, validate:false},
-      validateForm4: {isValid:false, validate:false},
-      validateForm5: {isValid:false, validate:false},
-      validateForm6: {isValid:false, validate:false},
+      validateForm1: { isValid: false, validate: false, pageNum: "" },
+      validateForm2: { isValid: false, validate: false, pageNum: "" },
+      validateForm3: { isValid: false, validate: false, pageNum: "" },
+      validateForm4: { isValid: false, validate: false, pageNum: "" },
+      validateForm5: { isValid: false, validate: false, pageNum: "" },
+      validateForm6: { isValid: false, validate: false, pageNum: "" },
     },
-    dataArrived: false, 
+    dataArrived: false,
     data: [],
+    page: {
+      next: false,
+      previous: false,
+    },
   },
   reducers: {
     setSubmit: (state, action) => {
@@ -38,14 +42,17 @@ const Slice = createSlice({
     setValidateForm6: (state, action) => {
       state.validate.validateForm6 = action.payload;
     },
-    setDataArrived: (state, action)=>{
+    setDataArrived: (state, action) => {
       state.dataArrived = action.payload;
     },
-    setData: (state, action)=>{
+    setData: (state, action) => {
       state.data = action.payload;
     },
-    setValidating: (state, action)=>{
+    setValidating: (state, action) => {
       state.validate.validating = action.payload;
+    },
+    setPage: (state, action) => {
+      state.page = action.payload;
     },
   },
 });
@@ -61,4 +68,5 @@ export const {
   setValidateForm6,
   setDataArrived,
   setData,
+  setPage,
 } = Slice.actions;

@@ -12,13 +12,13 @@ import {
   FormPage5,
   FormPage6,
 } from "./formPages";
-import {setValidateForm1} from "./registerStudentSlice";
+import { setValidateForm1 } from "./registerStudentSlice";
 
 export default function StudentForm() {
   const dispatch = useDispatch();
   const [Gender, setGender] = useState();
   const [pages, setPages] = useState(1);
-  const [checkValidate, setCheckValidate] = useState(false);
+  const MaxPage = 6;
   const FormD = new FormData();
   const firstName = useRef();
   const lastName = useRef();
@@ -44,25 +44,27 @@ export default function StudentForm() {
   const femaleParentPhone = useRef();
   const femaleParentEmail = useRef();
   const parentMarriageStatus = useRef();
-  const formValidate1 = useSelector(state=>state.RegisterStudent.validate.validateForm1);
-  const formValidate2 = useSelector(state=>state.RegisterStudent.validate.validateForm2);
-  const formValidate3 = useSelector(state=>state.RegisterStudent.validate.validateForm3);
-  const formValidate4 = useSelector(state=>state.RegisterStudent.validate.validateForm4);
-  const formValidate5 = useSelector(state=>state.RegisterStudent.validate.validateForm5);
-  const formValidate6 = useSelector(state=>state.RegisterStudent.validate.validateForm6);
+  const formValidate1 = useSelector(
+    (state) => state.RegisterStudent.validate.validateForm1
+  );
+  const formValidate2 = useSelector(
+    (state) => state.RegisterStudent.validate.validateForm2
+  );
+  const formValidate3 = useSelector(
+    (state) => state.RegisterStudent.validate.validateForm3
+  );
+  const formValidate4 = useSelector(
+    (state) => state.RegisterStudent.validate.validateForm4
+  );
+  const formValidate5 = useSelector(
+    (state) => state.RegisterStudent.validate.validateForm5
+  );
+  const formValidate6 = useSelector(
+    (state) => state.RegisterStudent.validate.validateForm6
+  );
+  const pageChange = useSelector((state) => state.RegisterStudent.page);
   const status = useSelector((state) => state.Auth.status);
-  
-  //start form validtion
-  useEffect(()=>{
-    if(formValidate1.validate){
 
-    }else if(formValidate2.validate){
-    }
-  }, [checkValidate]);
-
-  const SetGender=e=>{
-    setGender(e.target.value);
-  };
   /*
   useEffect(()=>{
     console.log(" status of authentication", status);
@@ -80,7 +82,7 @@ export default function StudentForm() {
         username: username.current.value,
         email: email.current.value,
         password: password.current.value,
-      }
+      },
     });
     formD.append("parent", {
       parent: {
@@ -111,70 +113,70 @@ export default function StudentForm() {
     formD.append("gender", Gender);
     formD.append("date_of_birth", dateOfBirth.current.value);
     formD.append("religion", regligion.current.value);
-      /**
-    const Body = {
-      user: {
-        first_name: firstName.current.value,
-        last_name: lastName.current.value,
-        username: username.current.value,
-        email: email.current.value,
-        password: password.current.value,
-      },
-      parent: {
-        male_partner_full_name: maleParentName.current.value,
-        male_tel_number: maleParentPhone.current.value,
-        male_email: maleParentEmail.current.value,
-        male_date_of_birth: maleParentDateOfBirth.current.value,
-        female_partner_full_name: femaleParentName.current.value,
-        female_tel_number: femaleParentPhone.current.value,
-        female_email: femaleParentEmail.current.value,
-        female_date_of_birth: femaleParentDateOfBirth.current.value,
-        marital_status: parentMarriageStatus.current.value,
-      },
-      first_name: firstName.current.value,
-      last_name: lastName.current.value,
-      username: username.current.value,
-      email: email.current.value,
-      phone: phone.current.value,
-      hometown: hometown.current.value,
-      location: currentLocation.current.value,
-      nationality: nationality.current.value,
-      illness: illness.current.value,
-      allergies: allergies.current.value,
-      disability: disability.current.value,
-      gender: Gender,
-      currentLocation: currentLocation.current.value,
-      dateOfBirth: dateOfBirth.current.value,
-      religion: religion.current.value,
-    };
-       **/
-    /*
-    try{
-      Axios.post('api/register/registerStudent', JSON.stringify(Body))
-        .then(response=>console.log(response))
-        .catch({response}=>console.log(response));
-    }catch(err){
-      console.log(err);
-    };
-    */
-    console.log("register student", Body);
-    //dispatch(setVerify(true));
   };
 
-  //next button handler
-  const NextButtonHandler = (e)=>{
+  //page change button handler
+  const PageChangeHandler = (e, pageNum) => {
     e.preventDefault();
-    switch(pages){
+    switch (pages) {
       case 1:
-        setValidateForm1({...formValidate1, ["validate"]:true});
-        if(!formValidate1.isValid){
-          setPages((prev) => ++prev);
-        }
+        return dispatch(setValidateForm1({
+          ...formValidate1,
+          ["validate"]: true,
+          ["pageNum"]: pageNum,
+        }));
+        break;
+      case 2:
+        return dispatch(setValidateForm2({
+          ...formValidate2,
+          ["validate"]: true,
+          ["pageNum"]: pageNum,
+        }));
+        break;
+      case 3:
+        return dispatch(setValidateForm3({
+          ...formValidate3,
+          ["validate"]: true,
+          ["pageNum"]: pageNum,
+        }));
+        break;
+      case 4:
+        return dispatch(setValidateForm4({
+          ...formValidate4,
+          ["validate"]: true,
+          ["pageNum"]: pageNum,
+        }));
+        break;
+      case 5:
+        return dispatch(setValidateForm5({
+          ...formValidate5,
+          ["validate"]: true,
+          ["pageNum"]: pageNum,
+        }));
+        break;
+      case 6:
+        return dispatch(setValidateForm6({
+          ...formValidate6,
+          ["validate"]: true,
+          ["pageNum"]: pageNum,
+        }));
+        break;
     }
   };
 
-  const PrevButtonHandler = (e)=>{
-  };
+
+  //check for page change.
+  useEffect(() => {
+    //next page
+    if (pageChange.next) {
+      pages < MaxPage ? setPages((prev) => ++prev) : "";
+    }
+    //previous page
+    else if (pageChange.previous) {
+      pages == 1 ? setPages((prev) => --prev) : "";
+    }
+  }, [pageChange.next, pageChange.previous]);
+
   return (
     <>
       <div>
@@ -187,7 +189,7 @@ export default function StudentForm() {
             otherName={otherName}
             username={username}
             dateOfBirth={dateOfBirth}
-            setGender={SetGender}
+            setGender={setGender}
           />
 
           {/* formPage 2 */}
@@ -234,10 +236,7 @@ export default function StudentForm() {
           <div>
             <Button
               variant="contained"
-              onClick={(e) => {
-                e.preventDefault();
-                setPages((prev) => --prev);
-              }}
+              onClick={(e) => PageChangeHandler(e, "decreasePage")}
               disabled={pages == 1 ? true : false}
             >
               Prev
@@ -245,8 +244,7 @@ export default function StudentForm() {
 
             <Button
               variant="outlined"
-              onClick={(e) => {
-              }}
+              onClick={(e) => PageChangeHandler(e, "increasePage")}
               disabled={pages == 6 ? true : false}
             >
               Next

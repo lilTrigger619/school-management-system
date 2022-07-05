@@ -6,7 +6,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
 import { useSelector, useDispatch } from "react-redux";
-import { setValidateForm1 } from "../registerStudentSlice";
+import { setValidateForm1 , setPage} from "../registerStudentSlice";
 import { useState, useEffect } from "react";
 import { normalValidate, dateValidate } from "../../../../../utils/validations";
 
@@ -19,20 +19,23 @@ const FormPage1 = ({
   setGender,
   hidden,
 }) => {
+  const dispatch = useDispatch();
   const [InputErrors, setInputErrors] = useState({
     firstName: "",
     lastName: "",
-    OtherName: "",
+    otherName: "",
     username: "",
     dateOfBirth: "",
     gender: "",
   });
-  const [Gender, SetGender] = useState();
+  const [Gender, localSetGender] = useState();
   const ValidateForm = useSelector(
     (state) => state.RegisterStudent.validate.validateForm1
   );
   const Data = useSelector((state) => state.RegisterStudent.data);
+  const pageState = useSelector((state) => state.RegisterStudent.page);
 
+  //validate form
   useEffect(() => {
     if (ValidateForm.validate) {
       const Usernames = [];
@@ -43,25 +46,56 @@ const FormPage1 = ({
         ["firstName"]: normalValidate(firstName.current.value),
         ["lastName"]: normalValidate(lastName.current.value),
         ["otherName"]: normalValidate(otherName.current.value),
-        ["username"]: normalValidate(username.current.value, {
-          username: true,
-          Usernames,
-        }),
+        ["username"]: normalValidate(username.current.value),
         ["dateOfBirth"]: dateValidate(dateOfBirth.current.value),
         ["gender"]: normalValidate(Gender),
       });
+      console.log("here are the input errors", InputErrors);
+      console.log({pageOneData:{
+        firstName: firstName.current.value,
+        lastName: lastName.current.value,
+        otherName: otherName.current.value,
+        username: username.current.value,
+        "date-of-birth": dateOfBirth.current.value,
+        gender: Gender,
+      }});
 
-      !InputErrors.firstName ||
-      !InputErrors.lastName ||
-      !InputErrors.otherName ||
-      !InputErrors.username ||
-      !InputErrors.dateOfBirth ||
+      if(
+      !InputErrors.firstName &&
+      !InputErrors.lastName &&
+      !InputErrors.otherName &&
+      !InputErrors.username &&
+      !InputErrors.dateOfBirth &&
       !InputErrors.gender
-        ? setValidateForm1({ ...ValidateForm, ["isValid"]: true })
-        : "";
-      setValidateForm1({ ...ValidateForm, ["validate"]: false });
+      ){
+        dispatch(setValidateForm1({ ...ValidateForm, ["isValid"]: true }))
+        console.log("after setting validate to true", ValidateForm);
+      }
+      dispatch(setValidateForm1({...ValidateForm, ["isValid"]:true}));
     }
   }, [ValidateForm.validate]);
+
+  //when the form is valid move to next or prev page or nothing
+  useEffect(() => {
+    if (ValidateForm.isValid) {
+      console.log("The form is valid");
+      ValidateForm.pageNum == "increasePage"
+        ? dispatch(setPage({ ...pageState, ["next"]: true }))
+        : ValidateForm.pageNum == "decreasePage"
+        ? dispatch(setPage({ ...pageState, ["previous"]: true }))
+        : "";
+      //after
+      dispatch(
+        setValidateForm1({
+          ...ValidateForm,
+          ["isValid"]: false,
+          ["pageNum"]: "",
+        })
+      );
+      dispatch(setPage({ next: false, previous: false }));
+    }
+  }, [ValidateForm.isValid]);
+
   return (
     <>
       <div className={`${hidden ? "hidden" : ""}`}>
@@ -76,11 +110,7 @@ const FormPage1 = ({
             control={
               <TextField
                 ref={firstName}
-                onChange={(e) => {
-                  firstName.current.value = e.target.value;
-                  //validate
-                  validate(e.target.value);
-                }}
+                onChange={(e) => (firstName.current.value = e.target.value)}
                 name="firstName"
                 required
                 placeholder="eg. John"
@@ -105,13 +135,15 @@ const FormPage1 = ({
             control={
               <TextField
                 ref={otherName}
-                onChange={(e) => (firstName.current.value = e.target.value)}
+                onChange={(e) => (otherName.current.value = e.target.value)}
                 name="other name"
                 error={InputErrors.otherName}
                 helperText={
                   <>
                     <span>
+                      <Typography variant="bod1">
                       More than one othername may be entered without a comma
+                      </Typography>
                     </span>
                     <br />
                     <span>
@@ -208,13 +240,11 @@ const FormPage1 = ({
           <FormLabel component="legend">Gender</FormLabel>
           <RadioGroup
             onChange={(e) => {
-              setGender;
-              SetGender(e.target.value);
+              setGender(e.target.value);
+              localSetGender(e.target.value);
             }}
             name="gender"
             value={Gender}
-            error={true}
-            helperText="Testing the radio error"
           >
             <FormControlLabel
               control={<Radio />}
@@ -228,6 +258,7 @@ const FormPage1 = ({
               label="Female"
               labelPlacement="end"
             />
+            <Typography color="error">{InputErrors.gender}</Typography>
           </RadioGroup>
         </FormControl>
       </div>

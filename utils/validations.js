@@ -39,12 +39,11 @@ const symbols = [
 const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 //validating username, firstname, lastname, and otheranem;
-const normalValidate = (data,  username, usernameData ) => {
+const normalValidate = (data, username, usernameData) => {
   username = username ?? "";
   usernameData = usernameData ?? [];
-
   let Err = "";
-  if (data == "" || data == undefined ) {
+  if (data == "" || data == undefined) {
     Err = "This field cannot be left empty!";
   } else if (data.length < 3) {
     Err = "Minimum required length is 3";
@@ -65,9 +64,9 @@ const dateValidate = (date) => {
   let Err = "";
   const nowDate = new Date();
   const birthDate = new Date(date);
-  if(date == undefined || date == ""){
+  if (date == undefined || date == "") {
     Err = "This field connot be left empty!";
-  }else if (nowDate.getFullYear() < birthDate.getFullYear()) {
+  } else if (nowDate.getFullYear() < birthDate.getFullYear()) {
     Err = "Invalide date";
   }
   return Err;
@@ -76,12 +75,43 @@ const dateValidate = (date) => {
 //validate email
 const emailValidate = (email) => {
   let Err = "";
-  if (emailPattern.test(email)) {
+  if (email == undefined || email == "") {
+    Err = "";
+  } else if (!emailPattern.test(email)) {
     Err = "Invalid email pattern";
   }
   return Err;
 };
 
+//validate fullname
+const fullNameValidate = (fullname) => {
+  let Err = "";
+  if (fullname == undefined || fullname == "") {
+    Err = "This input field cannot be left empty";
+  } else if (fullname.length < 3) {
+    Err = "The input is too small!";
+  } else if (fullname > 50) {
+    Err = "The input is too long!";
+  } else if (containesOne(fullname, symbols)) {
+    Err = "This input filled cannot contain symbols";
+  } else if (containesOne(fullname, numbers)) {
+    Err = "This input field cannot contain numerals";
+  } else {
+    Err = "";
+  }
+  return Err;
+};
+
+//radioValidate
+const radioValidate = (data) => {
+  let Err = "";
+  if (data == "" || data == undefined) {
+    Err = "This field cannot be left empty!";
+  }
+  return Err;
+};
+
+//contains on of the items
 const containesOne = (value, items) => {
   let response = false;
   for (let i = 0; i < items.length; i++) {
@@ -93,4 +123,10 @@ const containesOne = (value, items) => {
   return response;
 };
 
-export { normalValidate, dateValidate, emailValidate };
+export {
+  normalValidate,
+  dateValidate,
+  emailValidate,
+  fullNameValidate,
+  radioValidate,
+};

@@ -5,6 +5,16 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setValidateForm6, setPage } from "../registerStudentSlice";
+import {
+  normalValidate,
+  emailValidate,
+  dateValidate,
+  fullNameValidate,
+  radioValidate,
+} from "../../../../../utils/validations";
 
 const FormPage6 = ({
   hidden,
@@ -18,6 +28,96 @@ const FormPage6 = ({
   femaleParentEmail,
   parentMarriageStatus,
 }) => {
+  const [InputErrors, setInputErrors] = useState({
+    maleParentName: "",
+    maleParentDateOfBirth: "",
+    femaleParentName: "",
+    femaleParentDateOfBirth: "",
+    maritalStatus: "",
+  });
+  const VInfo = useSelector(
+    (state) => state.RegisterStudent.validate.validateForm6
+  );
+  const dispatch = useDispatch();
+  const PInfo = useSelector((state) => state.RegisterStudent.page);
+  console.log("debug validate info", VInfo);
+  console.log("debug Page infor", PInfo);
+
+  //validate triggered
+  useEffect(() => {
+    if (VInfo.validate) {
+      let isValid = false;
+      let localInputErrors = {
+        maleParentName: "",
+        maleParentDateOfBirth: "",
+        femaleParentName: "",
+        femaleParentDateOfBirth: "",
+        maritalStatus: "",
+      };
+      localInputErrors["maleParentName"] = fullNameValidate(
+        maleParentName.current.value
+      );
+      localInputErrors["maleParentDateOfBirth"] = dateValidate(
+        maleParentDateOfBirth.current.value
+      );
+      localInputErrors["femaleParentName"] = fullNameValidate(
+        femaleParentName.current.value
+      );
+      localInputErrors["femaleParentDateOfBirth"] = dateValidate(
+        femaleParentDateOfBirth.current.value
+      );
+      localInputErrors["maritalStatus"] = radioValidate(
+        parentMarriageStatus.current.value
+      );
+
+      if (
+        localInputErrors["maleParentName"] ||
+        localInputErrors["femaleParentName"] ||
+        localInputErrors["maleParentDateOfBirth"] ||
+        localInputErrors["femaleParentDateOfBirth"] ||
+        localInputErrors["maritalStatus"]
+      ) {
+        setInputErrors(localInputErrors);
+        isValid = false;
+      } else if(
+        !localInputErrors["maleParentName"] &&
+        !localInputErrors["femaleParentName"] &&
+        !localInputErrors["maleParentDateOfBirth"] &&
+        !localInputErrors["femaleParentDateOfBirth"] &&
+        !localInputErrors["maritalStatus"]
+      ){
+        setInputErrors({
+          maleParentName: "",
+          maleParentDateOfBirth: "",
+          femaleParentName: "",
+          femaleParentDateOfBirth: "",
+          maritalStatus: "",
+        });
+        isValid=true;
+        console.log("it is valid", localInputErrors);
+      }
+      dispatch(
+        setValidateForm6({
+          ...VInfo,
+          ["isValid"]: isValid,
+          ["validate"]: false,
+        })
+      );
+    }
+  }, [VInfo.validate]);
+
+  //when form is valid
+  useEffect(() => {
+    if (VInfo.isValid) {
+      if (VInfo.pageNum == "increasePage") {
+        dispatch(setPage({ ...PInfo, ["next"]: true }));
+      } else if (VInfo.pageNum == "decreasePage") {
+        dispatch(setPage({ ...PInfo, ["previous"]: true }));
+      }
+      dispatch(setValidateForm6({ ...VInfo, ["isValid"]: false }));
+    }
+  }, [VInfo.isValid]);
+
   return (
     <>
       <div className={`${hidden ? "hidden" : ""}`}>
@@ -34,6 +134,8 @@ const FormPage6 = ({
                   (maleParentName.current.value = e.target.value)
                 }
                 ref={maleParentName}
+                error={InputErrors.maleParentName}
+                helperText={InputErrors.maleParentName}
               />
             }
             label="Full name"
@@ -81,6 +183,8 @@ const FormPage6 = ({
                 onChange={(e) =>
                   (maleParentDateOfBirth.current.value = e.target.value)
                 }
+                error={InputErrors.maleParentDateOfBirth}
+                helperText={InputErrors.maleParentDateOfBirth}
               />
             }
             label="Date of birth"
@@ -92,7 +196,7 @@ const FormPage6 = ({
         <FormControl component="fieldset">
           <FormLabel component="legend"> Female Parent / Guardian</FormLabel>
 
-          {/* mother's phone number */}
+          {/* mother's name */}
           <FormControlLabel
             control={
               <TextField
@@ -101,6 +205,8 @@ const FormPage6 = ({
                 }
                 ref={femaleParentName}
                 name="mother's full name"
+                error={InputErrors.femaleParentName}
+                helperText={InputErrors.femaleParentName}
               />
             }
             label="Full Name"
@@ -148,6 +254,8 @@ const FormPage6 = ({
                 onChange={(e) =>
                   (femaleParentDateOfBirth.current.value = e.target.value)
                 }
+                error={InputErrors.femaleParentDateOfBirth}
+                helperText={InputErrors.femaleParentDateOfBirth}
               />
             }
             label="Date of birth"
@@ -220,6 +328,7 @@ const FormPage6 = ({
               value="Deceased_partner"
               control={<Radio />}
             />
+            <Typography variant="body2" color="error" >{InputErrors.maritalStatus}</Typography>
           </RadioGroup>
         </FormControl>
       </div>

@@ -6,7 +6,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
 import { useSelector, useDispatch } from "react-redux";
-import { setValidateForm1 , setPage} from "../registerStudentSlice";
+import { setValidateForm1, setPage } from "../registerStudentSlice";
 import { useState, useEffect } from "react";
 import { normalValidate, dateValidate } from "../../../../../utils/validations";
 
@@ -38,40 +38,67 @@ const FormPage1 = ({
   //validate form
   useEffect(() => {
     if (ValidateForm.validate) {
+      let isValid = false;
       const Usernames = [];
       console.log({ Usernames });
       Data.map((value) => Usernames.push(value.username));
-      setInputErrors({
-        ...InputErrors,
-        ["firstName"]: normalValidate(firstName.current.value),
-        ["lastName"]: normalValidate(lastName.current.value),
-        ["otherName"]: normalValidate(otherName.current.value),
-        ["username"]: normalValidate(username.current.value),
-        ["dateOfBirth"]: dateValidate(dateOfBirth.current.value),
-        ["gender"]: normalValidate(Gender),
-      });
+      let localErrors = {
+        firstName: normalValidate(firstName.current.value),
+        lastName: normalValidate(lastName.current.value),
+        otherName: normalValidate(otherName.current.value),
+        username: normalValidate(username.current.value),
+        dateOfBirth: dateValidate(dateOfBirth.current.value),
+        gender: normalValidate(Gender),
+      };
       console.log("here are the input errors", InputErrors);
-      console.log({pageOneData:{
-        firstName: firstName.current.value,
-        lastName: lastName.current.value,
-        otherName: otherName.current.value,
-        username: username.current.value,
-        "date-of-birth": dateOfBirth.current.value,
-        gender: Gender,
-      }});
+      console.log("here are the local errors", localErrors);
+      console.log({
+        pageOneData: {
+          firstName: firstName.current.value,
+          lastName: lastName.current.value,
+          otherName: otherName.current.value,
+          username: username.current.value,
+          "date-of-birth": dateOfBirth.current.value,
+          gender: Gender,
+        },
+      });
 
-      if(
-      !InputErrors.firstName &&
-      !InputErrors.lastName &&
-      !InputErrors.otherName &&
-      !InputErrors.username &&
-      !InputErrors.dateOfBirth &&
-      !InputErrors.gender
-      ){
-        dispatch(setValidateForm1({ ...ValidateForm, ["isValid"]: true }))
-        console.log("after setting validate to true", ValidateForm);
+      if (
+        localErrors.firstName ||
+        localErrors.lastName ||
+        localErrors.otherName ||
+        localErrors.username ||
+        localErrors.dateOfBirth ||
+        localErrors.gender
+      ) {
+        setInputErrors({
+          ...InputErrors,
+          ["firstName"]: localErrors.firstName,
+          ["lastName"]: localErrors.lastName,
+          ["otherName"]: localErrors.otherName,
+          ["username"]: localErrors.username,
+          ["dateOfBirth"]: localErrors.dateOfBirth,
+          ["gender"]: localErrors.gender,
+        });
+        isValid = false;
+      } else if (
+        !localErrors.firstName &&
+        !localErrors.lastName &&
+        !localErrors.otherName &&
+        !localErrors.username &&
+        !localErrors.dateOfBirth &&
+        !localErrors.gender
+      ) {
+        isValid = true;
       }
-      dispatch(setValidateForm1({...ValidateForm, ["isValid"]:true}));
+
+      dispatch(
+        setValidateForm1({
+          ...ValidateForm,
+          ["validate"]: false,
+          ["isValid"]: isValid,
+        })
+      );
     }
   }, [ValidateForm.validate]);
 
@@ -92,7 +119,6 @@ const FormPage1 = ({
           ["pageNum"]: "",
         })
       );
-      dispatch(setPage({ next: false, previous: false }));
     }
   }, [ValidateForm.isValid]);
 
@@ -142,7 +168,7 @@ const FormPage1 = ({
                   <>
                     <span>
                       <Typography variant="bod1">
-                      More than one othername may be entered without a comma
+                        More than one othername may be entered without a comma
                       </Typography>
                     </span>
                     <br />

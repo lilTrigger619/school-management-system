@@ -1,28 +1,39 @@
-import Axios from 'axios';
-import cookie from 'cookie';
-import {Req, _Response} from '../req/funcs';  
+import Axios from "axios";
+import cookie from "cookie";
+import { Req, _Response } from "../req/funcs";
+import FormData from "form-data";
 
-export default async function  handler(req, res){
+export default async function handler(req, res) {
   const cookies = cookie.parse(req.headers.cookie);
   const Access = cookies.access ?? "";
   const Refresh = cookies.refresh ?? "";
+  const FormD = new FormData();
+  const {body}  = req;
+  FormD.append('user', body.user);
 
-  if(Refresh){
+  if (Refresh) {
     // if the refresh token exist.
-    if(req.method=="GET" && Access){
+    if (req.method == "GET" && Access) {
       //get
-      console.log("Access cookies exist and request method is get");
-      const Request =new Req(Access, Refresh, "/student/");
+      const Request = new Req(Access, Refresh, "/student/");
       const RequestResponse = await Request.get();
-      console.log("you hit register student");
       _Response(res, RequestResponse.status, RequestResponse.data);
-    };
+    }
 
-    if(req.method=="Post" && Access){
+    if (req.method == "POST" && Access) {
       //post
-
-    };
-  }else{
-    res.status(404).json("Unauthorized");
-  };
-};
+      const { body } = req;
+      const Request = new Req(
+        Access,
+        Refresh,
+        "/student/create_student/",
+        body
+      );
+      const RequestResponse = await Request.post()
+      console.log("Requet response", RequestResponse);
+      _Response(res, RequestResponse.status, RequestResponse.data);
+    }
+  } else {
+    res.status(401).json("Unauthorized");
+  }
+}

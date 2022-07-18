@@ -40,8 +40,6 @@ const FormPage6 = ({
   );
   const dispatch = useDispatch();
   const PInfo = useSelector((state) => state.RegisterStudent.page);
-  console.log("debug validate info", VInfo);
-  console.log("debug Page infor", PInfo);
 
   //validate triggered
   useEffect(() => {
@@ -94,7 +92,6 @@ const FormPage6 = ({
           maritalStatus: "",
         });
         isValid=true;
-        console.log("it is valid", localInputErrors);
       }
       dispatch(
         setValidateForm6({

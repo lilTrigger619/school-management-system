@@ -40,28 +40,16 @@ const FormPage1 = ({
     if (ValidateForm.validate) {
       let isValid = false;
       const Usernames = [];
-      console.log({ Usernames });
       Data.map((value) => Usernames.push(value.username));
+      console.log({ Usernames });
       let localErrors = {
         firstName: normalValidate(firstName.current.value),
         lastName: normalValidate(lastName.current.value),
         otherName: normalValidate(otherName.current.value),
-        username: normalValidate(username.current.value),
+        username: normalValidate(username.current.value, true, Usernames),
         dateOfBirth: dateValidate(dateOfBirth.current.value),
         gender: normalValidate(Gender),
       };
-      console.log("here are the input errors", InputErrors);
-      console.log("here are the local errors", localErrors);
-      console.log({
-        pageOneData: {
-          firstName: firstName.current.value,
-          lastName: lastName.current.value,
-          otherName: otherName.current.value,
-          username: username.current.value,
-          "date-of-birth": dateOfBirth.current.value,
-          gender: Gender,
-        },
-      });
 
       if (
         localErrors.firstName ||
@@ -89,6 +77,15 @@ const FormPage1 = ({
         !localErrors.dateOfBirth &&
         !localErrors.gender
       ) {
+        setInputErrors({
+          ...InputErrors,
+          ['firstName']: '',
+          ['lastName']: '',
+          ['otherName'] : '',
+          ['username']: '',
+          ['dateOfBirth']: '',
+          ['gender']: ''
+        });
         isValid = true;
       }
 

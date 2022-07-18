@@ -19,6 +19,12 @@ const Slice = createSlice({
       next: false,
       previous: false,
     },
+    registerFormData: "",
+    submissionStatus: {
+      submitted: false,
+      ok : false,
+      data: "",
+    },
   },
   reducers: {
     setSubmit: (state, action) => {
@@ -54,6 +60,12 @@ const Slice = createSlice({
     setPage: (state, action) => {
       state.page = action.payload;
     },
+    setRegisterStudentData: (state, action)=>{
+      state.registerFormData = action.payload;
+    },
+    setSubmissionStatus: (state, action)=>{
+      state.submissionStatus = action.payload;
+    },
   },
 });
 
@@ -69,4 +81,6 @@ export const {
   setDataArrived,
   setData,
   setPage,
+  setRegisterStudentData,
+  setSubmissionStatus,
 } = Slice.actions;

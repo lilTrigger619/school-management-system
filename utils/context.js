@@ -1,9 +1,11 @@
 import Axios from "axios";
+import cookie from 'cookie';
 
 class ContextRequest {
   constructor(url, body) {
     this.url = url;
     this.body = body;
+    this.Response = { status: "", data: "", error: false };
   }
   //get items
   get = async () => {
@@ -20,23 +22,26 @@ class ContextRequest {
 
   //post items
   post = () => {
-    const Response = { status: "", data: "", error: false };
-    try {
-      Axios.post(this.url, this.body)
-        .then((res) => {
-          Response.status = res.status;
-          Response.data = res.data;
-        })
-        .catch((err) => {
-          Reponse.status = err.status;
-          Response.data = err.data;
-        });
-    } catch (error) {
-      Response.err = true;
-      Response.data = err;
-    }
+    let resp = Axios.post(this.url, this.body)
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        return err;
+      });
+    return resp;
+  };
 
-    return Response;
+  //post formData objject but we won't use it anymore
+  postFormData = () => {
+    let Auth = Axios.get("/api/auth")
+      .then((res) => {
+        return res;
+      })
+      .catch((res) => {
+        return res;
+      });
+    return Auth;
   };
 
   //put api request
@@ -82,4 +87,13 @@ class ContextRequest {
   };
 }
 
+const Ppost = (url, body) => {
+  let Response = {};
+  Axios.post(url, body)
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => err);
+};
 export default ContextRequest;
+export { Ppost };

@@ -54,7 +54,9 @@ const normalValidate = (data, username, usernameData) => {
   } else if (containesOne(data, numbers) && !username) {
     Err = "This input field cannot contain numbers";
   } else if (username) {
-    containesOne(data, usernameData) ? (Err = "Username already exist") : "";
+    usernameData.find((value) => value == data)
+      ? (Err = "Username already exist")
+      : (Err = "");
   }
   return Err;
 };

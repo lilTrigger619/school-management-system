@@ -48,7 +48,7 @@ export default async (req, res) => {
           ? res.status(verifyResponse.status).json(verifyResponse.data)
           : res.status(401).json("Unauthorized");
       } else {
-        res.status(500).json("unauthorized");
+        res.status(401).json("Unauthorized");
       }
     }
   } else {

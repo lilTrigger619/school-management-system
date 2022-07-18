@@ -1,8 +1,10 @@
 import axios from "axios";
 import cookie from 'cookie';
+
 // Login api to make the login api call
 
 export default async (req, res) => {
+
 	try{
 	  if (req.method == "POST") {
 		const url = process.env.Backend + "/login/";

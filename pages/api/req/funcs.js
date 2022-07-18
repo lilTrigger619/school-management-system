@@ -26,11 +26,23 @@ class Req {
   async verify() {
     let response = { status: "", data: "" };
     try {
-      response = await axios.post(process.env.Backend + "/verify_token/", {
+      let apiRes = await axios.post(process.env.Backend + "/verify_token/", {
         token: this.accessToken,
       });
+      (await apiRes?.status)
+        ? (response = apiRes)
+        : (response = {
+            status: 500,
+            data: "Something went wrong with the request",
+          });
     } catch (err) {
-      response = await err.response;
+      let apiErr = await err.response;
+      (await apiErr?.status)
+        ? (response = apiErr)
+        : (response = {
+            status: 500,
+            data: "Something went wrong with the request",
+          });
     }
     return response;
   }
@@ -49,7 +61,7 @@ class Req {
 
   async post() {
     let response = { status: "", data: "" };
-    const url = process.env.backend + this.url;
+    const url = process.env.Backend + this.url;
     try {
       response = await axios.post(
         url,
@@ -224,7 +236,7 @@ const RefreshToken = async (cookie, req, res, Refresh, Callback, data) => {
   return { Response, res };
 };
 
-const _Response = ( res, status, data, consoleData ) => {
+const _Response = (res, status, data, consoleData) => {
   let _console = consoleData ?? "";
   _console.constructor == Array
     ? _console.forEach((value) => console.log(value))

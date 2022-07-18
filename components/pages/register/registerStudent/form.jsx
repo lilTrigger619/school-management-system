@@ -21,13 +21,23 @@ import {
   setValidateForm4,
   setValidateForm5,
   setValidateForm6,
+  setSubmissionStatus,
+  setRegisterStudentData,
 } from "./registerStudentSlice";
+import LoadingDialog from "../../../globals/loadingDialog";
+import SuccessRegister from "../../../globals/successRegister";
+import ErrorRegister from "../../../globals/errorRegister";
 
 export default function StudentForm() {
   const dispatch = useDispatch();
   const [Gender, setGender] = useState();
   const [pages, setPages] = useState(1);
   const [ProfileImage, setProfileImage] = useState();
+  const [process, setProcess] = useState(false);
+  const [showSubmitStat, setShowSubmitStat] = useState({
+    error: false,
+    success: false,
+  });
   const MaxPage = 7;
   const formD = new FormData();
   const firstName = useRef();
@@ -75,6 +85,12 @@ export default function StudentForm() {
   );
   const pageChange = useSelector((state) => state.RegisterStudent.page);
   const status = useSelector((state) => state.Auth.status);
+  const SubmissionStatus = useSelector(
+    (state) => state.RegisterStudent.submissionStatus
+  );
+  const RegisterFormData = useSelector(
+    (state) => state.RegisterStudent.registerFormData
+  );
 
   /*
   useEffect(()=>{
@@ -83,10 +99,65 @@ export default function StudentForm() {
   }, [status]);
   */
 
+  //the loading dialog box close
+  const onLoadingDialogClose = () => {
+    //do nothing when outside the dialog is clicked.
+    setProcess(true);
+  };
+  //submission satus dialog close.
+  const submissionStat_d_Onclose = () => {
+    //do nothing when outside the dialog is clicked.
+    setShowSubmitStat(true);
+  };
+
+  // submission made?
+  useEffect(() => {
+    if (SubmissionStatus.submitted) {
+      setTimeout(() => {
+        if (SubmissionStatus.ok) {
+          setProcess(false);
+          setShowSubmitStat({
+            ...showSubmitStat,
+            ["error"]: false,
+            ["success"]: true,
+          });
+        } else {
+          setProcess(false);
+          setShowSubmitStat({
+            ...showSubmitStat,
+            ["error"]: true,
+            ["success"]: false,
+          });
+        }
+        console.log("Submission data", SubmissionStatus);
+      }, 3000);
+      dispatch(
+        setSubmissionStatus({
+          ...SubmissionStatus,
+          ["submitted"]: false,
+        })
+      );
+    }
+  }, [SubmissionStatus.submitted]);
+
+  //Processing or loading prompts takes too long
+  useEffect(()=>{
+    setTimeout(()=>{
+      if(process){
+        setShowSubmitStat({
+          ...showSubmitStat,
+          ["error"]: true,
+          ["success"]: false,
+        });
+        setProcess(false);
+      };
+    }, 10000);
+  }, [process]);
+
+  //onsubmit button click
   const onSubmit = (e) => {
     e.preventDefault();
     //appending the form data to the FormData instance
-    console.log("onSubmit");
     formD.append("user", {
       user: {
         first_name: firstName.current.value,
@@ -96,7 +167,7 @@ export default function StudentForm() {
         password: password.current.value,
       },
     });
-    
+
     formD.append("male_partner_full_name", maleParentName.current.value);
     formD.append("male_tel_number", maleParentPhone.current.value);
     formD.append("male_email", maleParentEmail.current.value);
@@ -121,9 +192,16 @@ export default function StudentForm() {
     formD.append("gender", Gender);
     formD.append("date_of_birth", dateOfBirth.current.value);
     formD.append("religion", religion.current.value);
-    formD.append("profile_image", ProfileImage);
+    ProfileImage ? formD.append("profile_image", ProfileImage) : "";
 
     const obj = {
+      user: {
+        first_name: firstName.current.value,
+        last_name: lastName.current.value,
+        username: username.current.value,
+        email: email.current.value,
+        password: password.current.value,
+      },
       male_partner_full_name: maleParentName.current.value,
       male_tel_number: maleParentPhone.current.value,
       male_email: maleParentEmail.current.value,
@@ -149,13 +227,20 @@ export default function StudentForm() {
       date_of_birth: dateOfBirth.current.value,
       religion: religion.current.value,
       "profile-image": ProfileImage,
+    };
+
+    //confirm user registration.
+    if (typeof window != "undefined") {
+      if (window.confirm("Are you sure you want to register this student ?")) {
+        setProcess(true);
+        dispatch(setRegisterStudentData(obj));
+      }
     }
-    console.log("the object", obj);
   };
 
   //page change button handler
   const PageChangeHandler = (e, pageNum) => {
-    console.log("current page", pages);
+    //console.log("current page", pages);
     e.preventDefault();
     switch (pages) {
       case 1:
@@ -213,7 +298,7 @@ export default function StudentForm() {
           : pageNum == "decreasePage"
           ? previousPage()
           : "";
-        break
+        break;
     }
   };
 
@@ -292,7 +377,10 @@ export default function StudentForm() {
           />
 
           {/* formPage 7 */}
-          <FormPage7 hidden={pages != 7 ? true : false} setProfileImage={(File)=>setProfileImage(File)}/>
+          <FormPage7
+            hidden={pages != 7 ? true : false}
+            setProfileImage={(File) => setProfileImage(File)}
+          />
 
           <div>
             <Button
@@ -314,11 +402,29 @@ export default function StudentForm() {
             <Typography variant="body1"> Page {pages} of 7 </Typography>
           </div>
 
-          <div className={`${pages != 7 ? "hidden" : ""}`}>
-            <Button type="submit" onClick={onSubmit}>Submit</Button>
+          <div className={`${pages != 7 ? "" : ""}`}>
+            <Button type="submit" onClick={onSubmit} disabled={false}>
+              Submit
+            </Button>
           </div>
         </form>
       </div>
+      <LoadingDialog open={process} onClose={onLoadingDialogClose} />
+      <SuccessRegister
+        open={showSubmitStat.success}
+        closeButton={() =>
+          setShowSubmitStat({
+            ...showSubmitStat,
+            ["success"]: false,
+          })
+        }
+      />
+      <ErrorRegister
+        open={showSubmitStat.error}
+        closeButton={() =>
+          setShowSubmitStat({ ...showSubmitStat, ["error"]: false })
+        }
+      />
     </>
   );
 }

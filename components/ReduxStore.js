@@ -6,6 +6,7 @@ import StudentUi from "./students/reducers/uiReducer";
 import DashboardData from "./pages/dashboard/dashboardSlice";
 import RegisterStudent from "./pages/register/registerStudent/registerStudentSlice";
 import Layout from "./managementLayout/layoutSlice";
+import GlobalState from "./globalSlice";
 
 export default configureStore({
   reducer: {
@@ -16,5 +17,6 @@ export default configureStore({
     StudentUi,
     DashboardData,
     RegisterStudent,
+    GlobalState,
   },
 });

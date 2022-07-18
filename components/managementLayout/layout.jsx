@@ -105,7 +105,7 @@ export default function Layout({ children }) {
       };
       const ApiRes = await axios.get("/api/auth", Config);
       //change Authenticate to true when the response is ok
-
+      console.log(ApiRes);
       const Status = await ApiRes.status;
       const SText = await ApiRes.statusText;
       if (Status == 200 && SText == "OK") {

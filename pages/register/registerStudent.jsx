@@ -1,11 +1,17 @@
 import Typography from "@material-ui/core/Typography";
 import Layout from "../../components/managementLayout/layout";
 import Context from "../../components/pages/register/registerStudent/context";
-import {useState, useRef} from "react";
+import { useEffect } from "react";
+import cookie from "cookie";
+import {useDispatch} from "react-redux"; 
+import {setToken} from "../../components/globalSlice";
 
-
-export default function RegisterStudent(){
-  return(
+export default function RegisterStudent({serverSideCookies}) {
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    dispatch(setToken(serverSideCookies));
+  }, []);
+  return (
     <>
       <Layout>
         <div className="my-9">
@@ -13,10 +19,14 @@ export default function RegisterStudent(){
 
           {/* input fields*/}
           {/* display the form in pages */}
-          <Context />
-
+          <Context/>
         </div>
       </Layout>
     </>
   );
-};
+}
+
+export function getServerSideProps({ req, res }) {
+  const Cookie = cookie.parse(req.headers.cookie);
+  return { props: { serverSideCookies: Cookie } };
+}

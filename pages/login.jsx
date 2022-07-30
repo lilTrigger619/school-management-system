@@ -158,10 +158,6 @@ export default function Login() {
             </Button>
           </div>
 
-          <div>
-          {/*test div remove when done*/}
-            <TestApi />
-          </div>
         </div>
       </Container>
     </div>

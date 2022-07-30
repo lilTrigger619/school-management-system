@@ -7,18 +7,6 @@ class Req {
     this.accessToken = accessToken;
     this.refreshToken = refreshToken;
     this.res = res;
-    this.postConfig = {
-      headers: {
-        accept: "application/json",
-        Authorization: "Bearer " + this.accessToken,
-      },
-    };
-    this.getConfig = {
-      headers: {
-        accept: "application/json",
-        Authorization: "Bearer " + this.accessToken,
-      },
-    };
 
     this.url = url;
     this.body = body;
@@ -116,13 +104,13 @@ class Req {
           }
         ); // the request.
 
-        this.accessToken = RefreshRes.data.access;
+        this.setAccessToken(RefreshRes.data.access);
         const _res = this.setCookie(this.res); // set access cookie from the res obj
+        console.log("headers have been set");
         this.res = _res;
         this.refreshResponse.status = RefreshRes.status;
         this.refreshResponse.data = RefreshRes.data;
         this.refreshResponse.res = this.res;
-        console.log("breakPoint refresh");
         return this.refreshResponse;
       } catch (err) {
         if (await err.response) {
@@ -131,6 +119,7 @@ class Req {
           this.refreshResponse.status = err.response.status;
           this.refreshResponse.data = err.response.data;
           this.refreshResponse.res = this.res;
+          return this.refreshResponse;
         } else {
           //when there is no response object inside the error object.
           // Logout is adviced
@@ -138,6 +127,7 @@ class Req {
           this.refreshResponse.status = 500;
           this.refreshResponse.data = "Unknown Error occurred";
           this.refreshResponse.res = this.res;
+          return this.refreshResponse;
         }
       }
     } else {
@@ -145,6 +135,7 @@ class Req {
       this.refreshResponse.status = 401;
       this.refreshResponse.data = "Unauthorized";
       this.refreshResponse.res = this.res;
+      return this.refreshResponse;
     }
   }
 
@@ -160,7 +151,12 @@ class Req {
       const PostRes = await axios.post(
         process.env.Backend + this.url,
         this.body,
-        this.postConfig
+        {
+          headers: {
+            Authorization: "Bearer " + this.accessToken,
+            Accept: "Application/json",
+          },
+        }
       );
       this.postResponse.status = PostRes.status;
       this.postResponse.data = PostRes.data;
@@ -172,17 +168,20 @@ class Req {
   }
 
   // get request
-  async get() {
+  get = async () => {
     const RefreshCallback = "get";
     if (!this.refreshToken)
       return (this.getResponse = this.getUnauthorizedResponseObj());
     if (!this.accessToken) return await this._refreshAccess(RefreshCallback);
 
     try {
-      const response = await axios.get(
-        process.env.Backend + this.url,
-        this.getConfig
-      );
+      const response = await axios.get(process.env.Backend + this.url, {
+        headers: {
+          Authorization: "Bearer " + this.accessToken,
+          Accept: "Application/json",
+        },
+      });
+      console.log("get status", response.status);
       this.getResponse = {
         data: response.data,
         status: response.status,
@@ -192,7 +191,7 @@ class Req {
     } catch (err) {
       return await this._tryFixResponseError(err, RefreshCallback);
     }
-  }
+  };
 
   async put() {
     const RefreshCallback = "put";
@@ -204,7 +203,12 @@ class Req {
       const PutResponse = await axios.put(
         process.env.Backend + this.url,
         this.body,
-        this.putConfig
+        {
+          headers: {
+            Authorization: "Bearer " + this.accessToken,
+            Accept: "Application/json",
+          },
+        }
       );
       this.putResponse = {
         data: PutResponse.data,
@@ -220,10 +224,46 @@ class Req {
   /*
    * Delete Request.
    * This is practically a get request.
-   * 
+   *
    */
-  delete = async ()=>{
-   return await this.get();
+  delete = async () => {
+    return await this.get();
+  };
+
+  /*
+   *
+   * The login request will be
+   * a get requeset without any token.
+   */
+  login = async () => {
+    try {
+      const LoginRequest = await axios.post(
+        process.env.Backend + "/login/",
+        this.body
+      );
+      return (this.postResponse = {
+        data: LoginRequest.data,
+        status: LoginRequest.status,
+        res: this.res,
+      });
+    } catch (err) {
+      //we cannno use the method created to
+      //try refreshing cus authentication is not
+      //required for login.
+      if (!err.response)
+        return (this.postResponse = {
+          data: err,
+          status: 500,
+          res: this.res,
+        });
+
+      const { response } = err;
+      return (this.postResponse = {
+        data: response.data,
+        status: response.status,
+        res: this.res,
+      });
+    }
   };
 
   //set the access cookie with the instance's access token
@@ -251,6 +291,9 @@ class Req {
   setBody(body) {
     return (this.body = body);
   }
+  getAccessToken() {
+    return this.accessToken;
+  }
 
   /*
    * this method is used by other methods
@@ -259,12 +302,15 @@ class Req {
   _tryFixResponseError = async (error, prop) => {
     const Prop = prop ?? "";
     //when there is a response object inside the error
-    console.log("Trying to fix response error");
     if (!error.response) return this.getUnknownResponseObj();
     const { response } = error;
-    if (!response.status == 401)
+    console.log("status", response.status);
+    if (response.status != 401) {
+      console.log("you should stop here");
       return { status: response.status, data: response.data, res: this.res };
-    this._refreshAccess(Prop);
+    }
+    console.log("but you reach here");
+    return await this._refreshAccess(Prop);
   };
 
   /*
@@ -274,7 +320,6 @@ class Req {
   _refreshAccess = async (prop) => {
     const Prop = prop ?? "";
     const RefreshResponse = await this.refresh();
-    console.log("breakPoint at _refreshAccess");
     if (RefreshResponse.status == 200) {
       switch (prop.toLowerCase()) {
         case "verify":
@@ -296,8 +341,6 @@ class Req {
     } else return this.getUnknownResponseObj();
   };
 } //end of req class
-
-
 
 //RefreshToken method
 const RefreshToken = async (req, res, access, refresh, callback) => {
@@ -322,6 +365,5 @@ const _Response = (res, status, data, consoleData) => {
 
   res.status(status).json(data);
 };
-
 
 export { RefreshToken, Req, _Response };

@@ -3,13 +3,13 @@ import cookie from "cookie";
 
 //base request for all
 class Req {
-  constructor(accessToken, refreshToken, url, body) {
+  constructor(accessToken, refreshToken, url, body, res) {
     this.accessToken = accessToken;
     this.refreshToken = refreshToken;
+    this.res = res;
     this.postConfig = {
       headers: {
         accept: "application/json",
-        "content-type": "application/json",
         Authorization: "Bearer " + this.accessToken,
       },
     };
@@ -19,87 +19,214 @@ class Req {
         Authorization: "Bearer " + this.accessToken,
       },
     };
+
     this.url = url;
     this.body = body;
+    // refresh response
+    this.refreshResponse = {
+      status: "",
+      data: "",
+      res: this.res,
+    };
+
+    // verify response
+    this.verifyResponse = {
+      status: "",
+      data: "",
+      res: this.res,
+    };
+
+    //post response
+    this.postResponse = {
+      status: "",
+      data: "",
+      res: this.res,
+    };
+
+    //get response
+    this.getResponse = {
+      status: "",
+      data: "",
+      res: this.res,
+    };
+
+    //put response
+    this.putResponse = {
+      status: "",
+      data: "",
+      res: this.res,
+    };
+
+    const UnknownResponseObj = {
+      data: "Unknown Error",
+      status: 500,
+      res: this.res,
+    };
+    const UnauthorizedResponseObj = {
+      data: "Unauthorized",
+      status: 401,
+      res: this.res,
+    };
+    this.getUnknownResponseObj = () => UnknownResponseObj;
+    this.getUnauthorizedResponseObj = () => UnauthorizedResponseObj;
   }
 
   async verify() {
-    let response = { status: "", data: "" };
+    //console.log({ UnknownResponseObj: this.getUnknownResponseObj() });
+    const RefreshCallback = "verify";
+    if (!this.refreshToken)
+      return (this.verifyResponse = this.getUnauthorizedResponseObj());
+    if (!this.accessToken) return await this._refreshAccess(RefreshCallback);
     try {
-      let apiRes = await axios.post(process.env.Backend + "/verify_token/", {
-        token: this.accessToken,
-      });
-      (await apiRes?.status)
-        ? (response = apiRes)
-        : (response = {
-            status: 500,
-            data: "Something went wrong with the request",
-          });
-    } catch (err) {
-      let apiErr = await err.response;
-      (await apiErr?.status)
-        ? (response = apiErr)
-        : (response = {
-            status: 500,
-            data: "Something went wrong with the request",
-          });
-    }
-    return response;
-  }
-
-  async refresh() {
-    let response = { status: "", data: "" };
-    try {
-      response = await axios.post(process.env.Backend + "/refresh_token/", {
-        refresh: this.refreshToken,
-      });
-    } catch (err) {
-      response = await err.response;
-    }
-    return response;
-  }
-
-  async post() {
-    let response = { status: "", data: "" };
-    const url = process.env.Backend + this.url;
-    try {
-      response = await axios.post(
-        url,
-        JSON.stringify(this.body),
+      const response = await axios.post(
+        process.env.Backend + "/verify_token/",
+        { token: this.accessToken },
         this.postConfig
       );
+      this.verifyResponse = {
+        res: this.res,
+        data: response.data,
+        status: response.status,
+      };
+      return this.verifyResponse;
     } catch (err) {
-      response = await err.response;
+      return await this._tryFixResponseError(err, RefreshCallback);
     }
-    return response;
   }
 
-  async get() {
-    let response = { status: "", data: "" };
-    const url = process.env.Backend + this.url;
-    try {
-      response = await axios.get(url, this.getConfig);
-    } catch (err) {
-      response = await err.response;
+  //refresh request
+  async refresh() {
+    /*
+     * this method will automatically refresh the access token
+     * and set the http_only cookie the the res object passed during
+     * the creation of the instance object.
+     *
+     * the whole response object is return atlong last.
+     *
+     * this is refresh method so there is no need to check for
+     * the existence of access token.
+     */
+    if (this.refreshToken) {
+      // when the refresh token exist
+      try {
+        const RefreshRes = await axios.post(
+          process.env.Backend + "/refresh_token/",
+          {
+            refresh: this.refreshToken,
+          }
+        ); // the request.
+
+        this.accessToken = RefreshRes.data.access;
+        const _res = this.setCookie(this.res); // set access cookie from the res obj
+        this.res = _res;
+        this.refreshResponse.status = RefreshRes.status;
+        this.refreshResponse.data = RefreshRes.data;
+        this.refreshResponse.res = this.res;
+        console.log("breakPoint refresh");
+        return this.refreshResponse;
+      } catch (err) {
+        if (await err.response) {
+          //when the response object exit inside the response object.
+          // Logout is adviced
+          this.refreshResponse.status = err.response.status;
+          this.refreshResponse.data = err.response.data;
+          this.refreshResponse.res = this.res;
+        } else {
+          //when there is no response object inside the error object.
+          // Logout is adviced
+          console.log({ err });
+          this.refreshResponse.status = 500;
+          this.refreshResponse.data = "Unknown Error occurred";
+          this.refreshResponse.res = this.res;
+        }
+      }
+    } else {
+      // when the refreshToken dosent exist
+      this.refreshResponse.status = 401;
+      this.refreshResponse.data = "Unauthorized";
+      this.refreshResponse.res = this.res;
     }
-    return response;
+  }
+
+  // post request.
+  async post() {
+    const RefreshCallback = "post";
+    if (!this.refreshToken)
+      return (this.postResponse = this.getUnauthorizedResponseObj());
+
+    if (!this.accessToken) return await this._refreshAccess(RefreshCallback);
+
+    try {
+      const PostRes = await axios.post(
+        process.env.Backend + this.url,
+        this.body,
+        this.postConfig
+      );
+      this.postResponse.status = PostRes.status;
+      this.postResponse.data = PostRes.data;
+      this.postResponse.res = this.res;
+      return this.postResponse;
+    } catch (error) {
+      return await this._tryFixResponseError(error, RefreshCallback);
+    }
+  }
+
+  // get request
+  async get() {
+    const RefreshCallback = "get";
+    if (!this.refreshToken)
+      return (this.getResponse = this.getUnauthorizedResponseObj());
+    if (!this.accessToken) return await this._refreshAccess(RefreshCallback);
+
+    try {
+      const response = await axios.get(
+        process.env.Backend + this.url,
+        this.getConfig
+      );
+      this.getResponse = {
+        data: response.data,
+        status: response.status,
+        res: this.res,
+      };
+      return this.getResponse;
+    } catch (err) {
+      return await this._tryFixResponseError(err, RefreshCallback);
+    }
   }
 
   async put() {
-    let response = { status: "", data: "" };
-    const url = process.env.Backend + this.url;
+    const RefreshCallback = "put";
+    if (!this.accessToken) return await this._refreshAccess(RefreshCallback);
+    if (!this.refreshToken)
+      return (this.putResponse = this.getUnauthorizedResponseObj());
+
     try {
-      response = await axios.put(
-        url,
-        JSON.stringify(this.body),
-        this.postConfig
+      const PutResponse = await axios.put(
+        process.env.Backend + this.url,
+        this.body,
+        this.putConfig
       );
+      this.putResponse = {
+        data: PutResponse.data,
+        status: PutResponse.status,
+        res: this.res,
+      };
+      return this.putResponse;
     } catch (err) {
-      response = await err.response;
+      return await this._tryFixResponseError(err, RefreshCallback);
     }
-    return response;
   }
 
+  /*
+   * Delete Request.
+   * This is practically a get request.
+   * 
+   */
+  delete = async ()=>{
+   return await this.get();
+  };
+
+  //set the access cookie with the instance's access token
   setCookie(res) {
     res.setHeader(
       "Set-Cookie",
@@ -124,116 +251,67 @@ class Req {
   setBody(body) {
     return (this.body = body);
   }
-}
 
-//base post request for all request.
-const PostRequest = async ({ accessToken, url, body }) => {
-  const response = {
-    ok: null,
-    response: "",
-  }; // this would be returned at the end of the method
-  const Config = {
-    headers: {
-      "content-type": "application/json",
-      accept: "application/json",
-      Authorization: "Bearer " + accessToken,
-    },
+  /*
+   * this method is used by other methods
+   * of this class to solve a response error
+   */
+  _tryFixResponseError = async (error, prop) => {
+    const Prop = prop ?? "";
+    //when there is a response object inside the error
+    console.log("Trying to fix response error");
+    if (!error.response) return this.getUnknownResponseObj();
+    const { response } = error;
+    if (!response.status == 401)
+      return { status: response.status, data: response.data, res: this.res };
+    this._refreshAccess(Prop);
   };
 
-  try {
-    axios
-      .post(url, body, config)
-      .then((resp) => {
-        response.ok = true;
-        response.response = resp;
-      })
-      .catch(({ response }) => {
-        response.ok = false;
-        response.response = response;
-      });
-  } catch (err) {
-    response.ok = false;
-  }
-
-  return response;
-};
-
-//base get request for all requests.
-const Request = async ({ accessToken, url }) => {
-  const Config = {
-    headers: {
-      Authorization: "Bearer " + accessToken,
-    },
+  /*
+   * this method is for refreshing when there is no
+   * access token
+   */
+  _refreshAccess = async (prop) => {
+    const Prop = prop ?? "";
+    const RefreshResponse = await this.refresh();
+    console.log("breakPoint at _refreshAccess");
+    if (RefreshResponse.status == 200) {
+      switch (prop.toLowerCase()) {
+        case "verify":
+          return await this.verify();
+          break;
+        case "post":
+          return await this.post();
+          break;
+        case "get":
+          return await this.get();
+          break;
+        case "put":
+          return await this.put();
+          break;
+        default:
+          return await this.verify();
+          break;
+      }
+    } else return this.getUnknownResponseObj();
   };
-  let Response;
-  try {
-    const Url = process.env.Backend + url;
-    const ApiRes = await axios.get(Url, Config);
-    Response = await ApiRes;
-  } catch (err) {
-    Response = err;
-  }
-  return Response;
-};
+} //end of req class
+
+
 
 //RefreshToken method
-const RefreshToken = async (cookie, req, res, Refresh, Callback, data) => {
-  const RefreshConfig = {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-  };
-  const RefreshUrl = process.env.Backend + "/refresh_token/";
-  const RefreshBody = Refresh ?? "";
-  console.log("[Refresh Token] Ok");
-  const Body = { refresh: Refresh };
-  console.log("[Refreshing status] ...");
-  try {
-    console.log("	[Getting new access Token] ...");
-    let Response;
-    const ApiRes = await axios.post(RefreshUrl, Body, RefreshConfig);
-    //checking if response from refresh token reques
-    //is ok.
-    const Status = await ApiRes.status;
-    if ((await Status) == 200) {
-      console.log("	[Getting new access Token] Ok");
-      const NewAccess = ApiRes.data.access;
-      console.log("	[Setting access Token as Cookie] ...");
-      res.setHeader(
-        "Set-Cookie",
-        cookie.serialize("access", NewAccess, {
-          maxAge: 60 * 60,
-          httpOnly: true,
-          secure: process.env.NODE_ENV !== "development",
-          path: "/",
-          sameSite: "strict",
-        })
-      );
-      //the callback function will be the Verify_token function
-      //This is called after a new verify token is set by the
-      //Refresh_token function.
-      const Data = {
-        accessToken: NewAccess,
-        url: data.url,
-      };
-      console.log("[Refreshing status] Ok");
-      Callback ? (Response = await Callback(Data)) : "";
-    } else {
-      //when the resfresh response is not ok.
-      //This should probably send the user to
-      //the login screen
-      Response = "Logout";
-    }
-  } catch (err) {
-    //when for some reson the refresh token request is not
-    //made from the frontend.
-    //This should also send the user back to the login
-    //screen
-    console.log("refresh error", err);
-    Response = err;
-  }
-  return { Response, res };
+const RefreshToken = async (req, res, access, refresh, callback) => {
+  const { Req } = require("../req/funcs");
+  const RefreshRequest = new Req(access, refresh, "", "", res);
+  const RefreshResponse = await RefreshRequest.refresh();
+  if (RefreshResponse.status == 200) {
+    console.log("succesful refresh", RefreshResponse.data.access);
+    Globals.newAccess = RefreshResponse.data.access;
+    const _res = RefreshResponse.data?.res ?? res;
+    res = _res;
+    callback(req, res);
+    return;
+  } else res.status(500).json("Failed to refresh");
 };
 
 const _Response = (res, status, data, consoleData) => {
@@ -245,4 +323,5 @@ const _Response = (res, status, data, consoleData) => {
   res.status(status).json(data);
 };
 
-export { Request, RefreshToken, Req, _Response };
+
+export { RefreshToken, Req, _Response };

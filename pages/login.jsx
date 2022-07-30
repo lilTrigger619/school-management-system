@@ -15,6 +15,7 @@ import {
   load,
   stop_loading,
 } from "../components/pages/login/loginSlice";
+import TestApi from "../components/pages/login/testApi";
 import { useRouter } from "next/router";
 import cookies from "js-cookie";
 import VisibilityIcon from "@material-ui/icons/Visibility";
@@ -155,6 +156,11 @@ export default function Login() {
             >
               Login
             </Button>
+          </div>
+
+          <div>
+          {/*test div remove when done*/}
+            <TestApi />
           </div>
         </div>
       </Container>

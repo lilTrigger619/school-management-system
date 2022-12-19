@@ -9,7 +9,7 @@ import {useState} from "react";
 export default function Voting(){
 	const Styles = useStyles();
   const [votingActive, setVotingActive] = useState(true)
-  const isMobile = useSelector(state=>state.StudentUi.isMobile)
+  const isMobile = useSelector(state=>state.StudentRouteUiSlice.isMobile)
   
 	return(
 		<>

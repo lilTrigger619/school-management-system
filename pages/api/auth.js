@@ -1,7 +1,8 @@
 import HTTP_COOKIE from "cookie";
 
-export default async (req, res) => {
-  const { cookie } = req.header;
+export default async function AuthHandler (req, res){
+  const {headers} = req;
+  const { cookie } = req.headers;
   if (!cookie) return res.status(401).json("no cookie");
   const AllCookies = HTTP_COOKIE.parse(cookie);
   let {access} = AllCookies;

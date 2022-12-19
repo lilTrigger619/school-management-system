@@ -5,7 +5,7 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core/";
-import NewsData from "../../../utils/newsData";
+import NewsData from "../../../../utils/newsData";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Scrollbar, Autoplay } from "swiper";
 import "swiper/css";
@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 
 export default function News() {
-  const isMobile = useSelector((state) => state.StudentUi.isMobile);
+  const isMobile = useSelector((state) => state.StudentRouteUiSlice.isMobile);
   const Styles = useStyles();
   return (
     <>

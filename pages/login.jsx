@@ -15,7 +15,7 @@ import {
   load,
   stop_loading,
 } from "../components/pages/login/loginSlice";
-import TestApi from "../components/pages/login/testApi";
+//import TestApi from "../components/pages/login/testApi";
 import { useRouter } from "next/router";
 import cookies from "js-cookie";
 import VisibilityIcon from "@material-ui/icons/Visibility";
@@ -38,6 +38,7 @@ export default function Login() {
   const visibilityHandler = () => {
     setPassVisible(!passVisible);
   };
+
   //icon for input
   const InputProps = {
     endAdornment: (
@@ -71,14 +72,19 @@ export default function Login() {
       const Status = await ApiRes.status;
       const SText = await ApiRes.statusText;
       if (Status == 200) {
+        console.log({Status}, "Ok");
         setApiError("");
         dispatch(Authenticate());
+        route.push("/");
+        /**
         const cookie = cookies.get("url") ?? "";
         if ((cookie != "") && (cookie != "undefined") && cookie != undefined) {
           route.push(cookie);
         } else {
           route.push("/");
-        }
+        }**/
+      }else{
+        console.log({Status}, "Not ok");
       }
     } catch (err) {
       const ApiError = await err.response;

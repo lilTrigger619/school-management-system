@@ -7,9 +7,9 @@ import {
   Voting,
   News,
   Links,
-} from "../../components/students/";
+} from "../../components/pages/StudentRoute";
 import Container from "@material-ui/core/Container";
-import AuthContext from "../../components/students/AuthContext";
+import AuthContext from "../../components/pages/StudentRoute/AuthContext";
 
 export default function Hompage() {
   return (

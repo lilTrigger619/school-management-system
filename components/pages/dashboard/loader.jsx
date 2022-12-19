@@ -7,13 +7,16 @@ export default function Loader(){
   const [LongLoad, setLongLoad] = useState(false);
   const DataArrived = useSelector(state=>state.DashboardData.dataArrived);
 
+  //getting data timeout
   useEffect(()=>{
     setTimeout(()=>{
       !DataArrived ?
         setLongLoad(true)
       : setLongLoad(false);
+      console.log({DataArrived})
     }, 10000);
-  },[]);
+  },[]); //end of useEffect
+
   return(
     <>
       <main style={Style}>

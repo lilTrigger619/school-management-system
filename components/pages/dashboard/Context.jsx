@@ -1,10 +1,16 @@
 import Axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { setStaffTable, setStudentTable, setUser, setDataArrived} from "./dashboardSlice";
-import { useEffect } from "react";
+import {
+  setStaffTable,
+  setStudentTable,
+  setUser,
+  setDataArrived,
+} from "./dashboardSlice";
+import { useEffect, useState } from "react";
 import Loader from "./loader";
 
 const Context = ({ children }) => {
+  const [contextDone, setContextDone]= useState(false);
   const staffTableData = useSelector(
     (state) => state.DashboardData.tableData.staffTable
   );
@@ -15,24 +21,13 @@ const Context = ({ children }) => {
   const isAuthenticated = useSelector((state) => state.Auth.isAuthenticated);
   const isLoading = useSelector((state) => state.Auth.isAuthenticated);
   const dataArrived = useSelector((state) => state.DashboardData.dataArrived);
+  console.log({dataArrived}, "from context comp");
   const dispatch = useDispatch();
 
   const request = async () => {
-    let _data = "";
     try {
       const url = "api/req/dashboard";
-      _data = await Axios.get(url);
-    } catch (err) {
-      console.log(err.response);
-      _data = await err.response;
-    }
-    return await _data;
-  };
-
-  //when Authentication is complete;
-  useEffect(async () => {
-    if (isAuthenticated) {
-      const res = await request();
+      const res = await Axios.get(url);
       if (res.status == 200) {
         dispatch(setStaffTable(res.data.basicStaffData.data));
         dispatch(setStudentTable(res.data.basicStudentData));
@@ -43,12 +38,23 @@ const Context = ({ children }) => {
         // else the page will just keep loading.
         console.log("[Data was not recieved]", res);
       }
-    } else {
-      console.log("[Failed to get context]\n[Reason: Authentication Failed]");
+    } catch (err) {
+      console.log(err.response ?? err, "when getting data");
     }
-  }, [isAuthenticated]);
+  };
 
-  return <>{!dataArrived? <Loader/>:children}</>;
+  //when Authentication is complete;
+  useEffect(() => {
+    if (isAuthenticated) request();
+  }, [isAuthenticated]); //end of useEffect
+
+  //when the data is arrived.
+  useEffect(()=>{
+    setContextDone(dataArrived);
+    console.log("is context done", dataArrived)
+  },[dataArrived]); //end of useEffect.
+
+  return <>{!contextDone ? <Loader /> : children}</>;
 };
 
 export default Context;

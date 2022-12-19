@@ -1,11 +1,16 @@
-import { Button } from "@material-ui/core/";
+import { Button,Link } from "@material-ui/core/";
+import NextLink from "next/link"
 import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
+import { useEffect } from "react";
 
-const Link = () => {
+const OtherLinks = () => {
   const Styles = useStyles();
   const isMobile = useSelector((state) => state.StudentUi.isMobile);
-  console.log(isMobile);
+  //console.log(isMobile);
+  useEffect(() => {
+    console.log({ isMobile });
+  }, []);
   return (
     <>
       <div className={`w-full my-12 ${Styles.btn_container}`}>

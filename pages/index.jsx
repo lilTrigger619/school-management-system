@@ -38,13 +38,11 @@ export default function Homepage({ at}) {
   const StaffTableData = useSelector(
     (state) => state.DashboardData.tableData.staffTablewn
   );
-  const StudentTableData = useSelector(
-    (state) => state.DashboardData.tableData.studentTable
-  );
+  const StudentTableData = useSelector( (state) => state.DashboardData.tableData.studentTable);
   const dispatch = useDispatch();
   const TableHead = ["Name", "Email", "Position", "Subject", "Grade", "Status"];
   //after data has arrived from the backend.
-  useEffect(async () => {
+  useEffect(() => {
     if (dataArrived) {
       dispatch(stop_loading());
     } else {
@@ -52,7 +50,7 @@ export default function Homepage({ at}) {
     }
   }, [dataArrived]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     let time = new Date();
     setGreetings(
       time.getHours() <= 1

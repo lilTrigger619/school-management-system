@@ -15,7 +15,7 @@ import S_dialog from "./seeMoreDialog";
 export default function Assignments() {
   const [openDialog, setOpenDialog] = useState(false);
   const Styles = useStyles();
-  const isMobile = useSelector((state) => state.StudentUi.isMobile);
+  const isMobile = useSelector((state) => state.StudentRouteUiSlice.isMobile);
 
   return (
     <>

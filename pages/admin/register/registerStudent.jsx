@@ -1,10 +1,10 @@
 import Typography from "@material-ui/core/Typography";
-import Layout from "../../components/managementLayout/layout";
-import Context from "../../components/pages/register/registerStudent/context";
+import Layout from "../../../components/managementLayout/layout";
+import Context from "../../../components/pages/register/registerStudent/context";
 import { useEffect } from "react";
 import cookie from "cookie";
 import {useDispatch} from "react-redux"; 
-import {setToken} from "../../components/globalSlice";
+import {setToken} from "../../../components/globalSlice";
 
 export default function RegisterStudent({serverSideCookies}) {
   const dispatch = useDispatch();

@@ -1,5 +1,4 @@
-
-import Layout from "../components/managementLayout/layout";
+import Layout from "../../components/managementLayout/layout";
 import {Typography} from '@material-ui/core';
 
 

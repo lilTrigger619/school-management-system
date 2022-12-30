@@ -21,7 +21,7 @@ export default function SideBar({ show }) {
       <List className="p-5">
         <ListItem className={`${Classes.appbarMargin} -mx-2`} />
 
-        <Link href="/">
+        <Link href="/admin">
           <ListItem className="my-4 -mx-2 hover:bg-gray-200 cursor-pointer">
             <Dashboard className={`${show ? "-ml-.5 mr-2" : "p-1"}`} />{" "}
             <Typography variant="body1" className={show ? "flex" : "hidden"}>
@@ -30,7 +30,7 @@ export default function SideBar({ show }) {
           </ListItem>
         </Link>
 
-        <Link href="/students">
+        <Link href="/admin/students">
           <ListItem className="my-4 -mx-2 hover:bg-gray-200 cursor-pointer">
             <Group className={`${show ? "-ml-.5 mr-2" : "p-1"}`} />{" "}
             <Typography variant="body1" className={show ? "flex" : "hidden"}>
@@ -39,7 +39,7 @@ export default function SideBar({ show }) {
           </ListItem>
         </Link>
 
-        <Link href="/instructor">
+        <Link href="/admin/instructor">
           <ListItem className="my-4 -mx-2 hover:bg-gray-200 cursor-pointer">
             <Person className={`${show ? "-ml-.5 mr-2" : "p-1"}`} />{" "}
             <Typography variant="body1" className={show ? "flex" : "hidden"}>
@@ -48,7 +48,7 @@ export default function SideBar({ show }) {
           </ListItem>
         </Link>
 
-        <Link href="/classes">
+        <Link href="/admin/classes">
           <ListItem className="my-4 -mx-2 hover:bg-gray-200 cursor-pointer">
             <Class className={`${show ? "-ml-.5 mr-2" : "p-1"}`} />{" "}
             <Typography variant="body1" className={show ? "flex" : "hidden"}>
@@ -57,7 +57,7 @@ export default function SideBar({ show }) {
           </ListItem>
         </Link>
 
-        <Link href="quiz">
+        <Link href="/admin/quiz">
           <ListItem className="my-4 -mx-2 hover:bg-gray-200 cursor-pointer">
             <Description className={`${show ? "-ml-.5 mr-2" : "p-1"}`} />{" "}
             <Typography variant="body1" className={show ? "flex" : "hidden"}>
@@ -66,7 +66,7 @@ export default function SideBar({ show }) {
           </ListItem>
         </Link>
 
-        <Link href="/finance">
+        <Link href="/admin/finance">
           <ListItem className="my-4 -mx-2 hover:bg-gray-200 cursor-pointer">
             <AccountBalance className={`${show ? "-ml-.5 mr-2" : "p-1"}`} />{" "}
             <Typography variant="body1" className={show ? "flex" : "hidden"}>
@@ -75,7 +75,7 @@ export default function SideBar({ show }) {
           </ListItem>
         </Link>
 
-        <Link href="/register">
+        <Link href="/admin/register">
           <ListItem className="my-4 -mx-2 hover:bg-gray-200 cursor-pointer">
             <Add className={`${show ? "-ml-.5 mr-2" : "p-1"}`} />{" "}
             <Typography variant="body1" className={show ? "flex" : "hidden"}>
@@ -84,7 +84,7 @@ export default function SideBar({ show }) {
           </ListItem>
         </Link>
 
-        <Link href="/repro">
+        <Link href="/admin/repro">
           <ListItem className="my-4 -mx-2 hover:bg-gray-200 cursor-pointer">
             <PostAdd className={`${show ? "-ml-.5 mr-2" : "p-1"}`} />{" "}
             <Typography variant="body1" className={show ? "flex" : "hidden"}>

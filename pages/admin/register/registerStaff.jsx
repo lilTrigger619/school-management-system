@@ -1,6 +1,6 @@
-import Layout from "../../components/managementLayout/layout";
+import Layout from "../../../components/managementLayout/layout";
 import { makeStyles } from "@material-ui/core/styles";
-import {S_form} from '../../components/pages/register/';
+import {S_form} from '../../../components/pages/register/';
 import Typography from '@material-ui/core/Typography';
 
 export default function Register() {

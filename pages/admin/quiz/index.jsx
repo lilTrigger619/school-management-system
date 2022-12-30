@@ -1,12 +1,12 @@
 import CardHeader from "@material-ui/core/CardHeader";
-import { MyCard } from "../../components";
+import { MyCard } from "../../../components";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Link from "next/link";
-import Layout from "../../components/managementLayout/layout";
+import Layout from "../../../components/managementLayout/layout";
 import AddIcon from "@material-ui/icons/Add";
 
 export default function Quiz() {

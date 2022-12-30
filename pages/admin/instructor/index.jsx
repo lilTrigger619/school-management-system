@@ -1,5 +1,5 @@
-import {Row1, Row2, Row3} from '../../components/pages/instructors/';
-import Layout from "../../components/managementLayout/layout";
+import {Row1, Row2, Row3} from '../../../components/pages/instructors/';
+import Layout from "../../../components/managementLayout/layout";
 import {Typography} from '@material-ui/core';
 
 export default function InstructorsPage(){

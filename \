@@ -1,0 +1,130 @@
+import { NextResponse } from "next/server";
+
+export const config = {
+  matcher: [
+    "/",
+    "/admin/:path*",
+    "/Staff/:path*",
+    "/Student/:path*",
+  ],
+};
+
+const { Backend } = process.env;
+export const middleware = async (req) => {
+  console.log(process.env);
+  const cookie = req.headers.get("cookie"); //type map
+  const { pathname } = req.nextUrl;
+  const { url } = req;
+  const LoginPage = new URL("/login", url);
+  const AdminLoginPage = new URL("/admin", url);
+  const StaffLoginPage = new URL("/Staff", url);
+  const StudentPage = new URL("/Student", url);
+  console.log(req.nextUrl, { url });
+  console.log({ cookie });
+  if (!cookie) return NextResponse.rewrite(LoginPage);
+  const HttpCookieHandler = require("cookie");
+  const { access, refresh } = HttpCookieHandler.parse(cookie);
+
+  //try verify
+  try{
+    const Vresponse  = await VerifyOrRefresh({access, refresh});
+    if (Vresponse.status!=200) return NextResponse.rewrite(LoginPage) 
+  }catch(error){
+    return NextResponse.rewrite(LoginPage);
+  };// end of try catch block.
+  
+  //try get user type for routing.
+  try{
+    if(Vresponse.refresh){
+      console.log("refreshed",{access: Vresponse.access})
+      GetUserType({access:Vresponse.access});
+      NextResponse.next();
+    }
+  }catch(error){
+    return NextResponse.rewrite(LoginPage);
+  }
+};
+
+//make verification or refresh.
+const VerifyOrRefresh = ({ access, refresh }) => {
+  return new Promise((resolve, reject) => {
+    if (!Boolean(refresh)) return reject({ status: 401, refresh: false });
+    if (!Boolean(access)) {
+      //when there is no access token
+      return fetch(Backend + "/refresh_token/", {
+        headers: {
+          "content-type": "application/json",
+          accept: "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({ refresh }),
+      }) //end of fetch request
+        .then((refreshResponse) => {
+          if (refreshResponse.status == 200) {
+            return refreshResponse.json();
+          } else {
+            return reject({ status: refreshResponse.status, refresh: false });
+          }
+        }) //end of .then block
+        .then(body=>{
+          const { access } = body;
+          if (access) return resolve({status:200, refresh:true, access})
+        })
+        .catch((error) => {
+          throw error;
+          return reject({ status: 500, refresh: false });
+        }); //end of .then block
+    } //end of if block
+    else {
+      console.log({access});
+      fetch(Backend + "/verify_token/", {
+        headers: {
+          "content-type": "application/json",
+          accept: "application/json",
+        },
+        method: "post",
+        body: JSON.stringify({ token: access }),
+      }) //end of fetch func.
+        .then((rawResponse) => {
+          const { status } = rawResponse;
+          if (status == 200) return resolve({ status: 200, refresh: false });
+          else if (status == 401) {
+            // when verify status is unauthtorized try refresh.
+            fetch(Backend + "/refresh_token/", {
+              method: "post",
+              headers: {
+                "content-type": "application/json",
+              },
+              body: JSON.stringify({ refresh }),
+            })
+              .then((res) =>
+                res.status == 200
+                  ? res.json()
+                  : reject({ status: res.status, refresh: false })
+              )
+              .the(refreshBody=> {
+                const { access } = refreshBody;
+                if (access) return resolve({status:200, refresh:false, access});
+              })
+              .catch((error) => reject({ status: 500, refresh: false }));
+          }//end of else if block
+        }) //end of .then function.
+        .catch((error) => {
+          throw error;
+          return reject({ status: 500, refresh: false });
+        });
+    } //end of else block
+  }); //end of promise
+}; // end of VerifyOrRefresh func.
+
+
+const  GetUserType = ({access})=>{
+  fetch(Backend+"/profile/account_type/", {
+    method: "get",
+    headers: {
+      authorization: "Bearer "+access,
+    },
+  })
+    .then(response => console.log("GetUserType",{response}));
+    .catch(error => console.log("GetUserType", {error}))
+};

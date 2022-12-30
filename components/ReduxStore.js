@@ -7,6 +7,7 @@ import DashboardData from "./pages/dashboard/dashboardSlice";
 import RegisterStudent from "./pages/register/registerStudent/registerStudentSlice";
 import Layout from "./managementLayout/layoutSlice";
 import GlobalState from "./globalSlice";
+import StaffLayoutSlice from "./managementLayout/staffLayout/staffLayoutSlice";
 
 export default configureStore({
   reducer: {
@@ -18,5 +19,6 @@ export default configureStore({
     DashboardData,
     RegisterStudent,
     GlobalState,
+    StaffLayoutSlice,
   },
 });

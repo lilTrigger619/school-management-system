@@ -1,5 +1,5 @@
-import Layout from "../../components/managementLayout/layout";
-import { Row1, Row2, Row3, Row4 } from "../../components/pages/finance";
+import Layout from "../../../components/managementLayout/layout";
+import { Row1, Row2, Row3, Row4 } from "../../../components/pages/finance";
 import { Typography } from "@material-ui/core";
 
 export default function FinancePage() {

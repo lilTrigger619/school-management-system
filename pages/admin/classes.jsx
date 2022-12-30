@@ -1,6 +1,6 @@
-import Layout from "../components/managementLayout/layout";
+import Layout from "../../components/managementLayout/layout";
 import { Typography } from "@material-ui/core";
-import { Row1, Row2, Row3, Row4, Row5 } from "../components/pages/classes";
+import { Row1, Row2, Row3, Row4, Row5 } from "../../components/pages/classes";
 import PhotoIcon from "@material-ui/core/";
 
 export default function ClassesPage() {

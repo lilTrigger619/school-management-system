@@ -1,5 +1,5 @@
 import Button from "@material-ui/core/Button";
-import Layout from "../../components/managementLayout/layout";
+import Layout from "../../../components/managementLayout/layout";
 import Typography from "@material-ui/core/Typography";
 import {
   Row1,
@@ -7,7 +7,7 @@ import {
   Row3,
   Row4,
   SavedQuestions,
-} from "../../components/pages/quiz";
+} from "../../../components/pages/quiz";
 import Link from "next/link";
 
 export default function ExamsPage() {

@@ -1,5 +1,15 @@
 import { Typography } from "@material-ui/core";
+import {StaffLayoutView, StaffLayoutContext} from "../../components/managementLayout/staffLayout/";
 
-const StaffHompage = () => <Typography>Welcom staff</Typography>;
+const StaffHompage = () =>{
+  return(
+    <>
+      <StaffLayoutContext/>
+      <StaffLayoutView>
+        <Typography>Hello staff</Typography>
+      </StaffLayoutView>
+    </>
+  )
+};
 
 export default StaffHompage;

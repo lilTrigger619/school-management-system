@@ -1,6 +1,6 @@
 import axios from "axios";
-import {useEffect} from "react";
-import {useSelector, useDispatch} from "react-redux";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Authenticate,
   de_Authenticate,
@@ -10,9 +10,9 @@ import {
   setVerify,
   setStatus,
 } from "../pages/login/loginSlice";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
-const AuthContext =()=>{
+const AuthContext = () => {
   const dispatch = useDispatch();
   const route = useRouter();
   const logout = useSelector((state) => state.Auth.logout);
@@ -20,16 +20,17 @@ const AuthContext =()=>{
   const isLoading = useSelector((state) => state.Auth.isLoading);
   const SaveUrl = useSelector((state) => state.Layout.saveUrl);
   const isAuthenticated = useSelector((state) => state.Auth.isAuthenticated);
-  
+
   //on page load
   useEffect(() => {
     onLoad();
+    requestMiniUser();
   }, []); //end of useEffect hook.
 
   //request for verification
   useEffect(() => {
     verify ? onLoad() : "";
-     dispatch(setVerify(false));
+    dispatch(setVerify(false));
   }, [verify]); // end of useEffect hook.
 
   //on logout
@@ -39,7 +40,9 @@ const AuthContext =()=>{
       onLogout();
       //dispatch(setSaveUrl(true));
     }
-    return()=>{dispatch(setLogout(false))} ;
+    return () => {
+      dispatch(setLogout(false));
+    };
   }, [logout]); //end of useEffect hook.
 
   //onload method
@@ -79,7 +82,6 @@ const AuthContext =()=>{
     }
   }; //end of onLoad func.
 
-
   //onlogout method
   const onLogout = async () => {
     try {
@@ -101,8 +103,18 @@ const AuthContext =()=>{
     }
   }; //end of onlogout FUnc.
 
-  return(
-    <></>
-  );
+  const requestMiniUser = async () => {
+    try {
+      const _miniUserResponse = await axios.get("/api/globals/user/?=miniUser");
+      console.log({ _miniUserResponse });
+    } catch (error) {
+      throw error;
+      console.log("error when getting miniUser inAUthContext", {
+        error: error.response ?? error,
+      });
+    }
+  };
+
+  return <></>;
 };
 export default AuthContext;

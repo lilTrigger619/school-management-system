@@ -1,4 +1,4 @@
-import Layout from "../../components/managementLayout/layout";
+import Layout from "../../../components/managementLayout/layout";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Link from "next/link";

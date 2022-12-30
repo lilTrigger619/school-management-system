@@ -1,6 +1,6 @@
-import Layout from "../components/managementLayout/layout";
+import Layout from "../../components/managementLayout/layout";
 import {Typography} from '@material-ui/core';
-import {Row1,Row2, Row3 } from '../components/pages/students'
+import {Row1,Row2, Row3 } from '../../components/pages/students'
 
 export default function StudentsPage(){
 	return(

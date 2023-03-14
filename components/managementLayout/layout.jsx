@@ -97,7 +97,7 @@ export default function Layout({ children }) {
                   ""
                 )}
                 <Typography variant={isMobile ? "h6" : "h3"} className="flex-1">
-                  Management
+                  Appollo-admin
                 </Typography>
                 {/**<IconButton color="inherit">**/}
                 <Button

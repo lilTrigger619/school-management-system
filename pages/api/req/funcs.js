@@ -104,6 +104,8 @@ class Req {
           }
         ); // the request.
 
+        console.log({ResfreshRes : RefreshRes.data});
+
         this.setAccessToken(RefreshRes.data.access);
         const _res = this.setCookie(this.res); // set access cookie from the res obj
         console.log("headers have been set");
@@ -181,7 +183,7 @@ class Req {
           Accept: "Application/json",
         },
       });
-      console.log("get status", response.status);
+      //console.log("get status", response.status);
       this.getResponse = {
         data: response.data,
         status: response.status,

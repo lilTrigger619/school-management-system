@@ -7,7 +7,7 @@ export default async function Handler (req, res){
   const AllCookies = Http_cookie_handler.parse(cookie);
   let {access, refresh} = AllCookies;
   const Access = access ?? "";
-  console.log({req})
+  //console.log({req})
 
   try{
     const {Req} = require("../req/funcs");

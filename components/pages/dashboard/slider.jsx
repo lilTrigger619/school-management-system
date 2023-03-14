@@ -1,4 +1,3 @@
-
 import { Swiper, SwiperSlide, } from "swiper/react";
 import SwiperCore, { Pagination, Navigation, Autoplay } from "swiper";
 import "swiper/css";
@@ -32,7 +31,7 @@ export default function SwiperComp(){
 						<CardContent className={`text-center space-between bg-green-400`}
 						>
               <Typography variant="h2">{studentData?studentData.length:'0'}</Typography>
-							<Typography>TOTAL NUMBER OF STUDENTS</Typography>
+							<Typography>NUMBER OF STUDENTS</Typography>
 						</CardContent>
 					</CardActionArea>
 					</Card>
@@ -41,7 +40,7 @@ export default function SwiperComp(){
 					<Card>
 						<CardContent className={`text-center space-between bg-yellow-400`}>
 							<Typography variant="h2">{ForiegnStudents.length}</Typography>
-							<Typography>TOTAL NUMBER OF FORIEGN STUDENTS</Typography>
+							<Typography>NUMBER OF FORIEGN STUDENTS</Typography>
 						</CardContent>
 					</Card>
 				</SwiperSlide>
@@ -49,7 +48,7 @@ export default function SwiperComp(){
 					<Card>
 						<CardContent className={`text-center space-between bg-blue-500`}>
 							<Typography variant="h2">{FemaleStudents.length}</Typography>
-							<Typography>TOTAL NUMBER OF FEMALE STUDENTS</Typography>
+							<Typography>NUMBER OF FEMALE STUDENTS</Typography>
 						</CardContent>
 					</Card>
 				</SwiperSlide>
@@ -57,7 +56,7 @@ export default function SwiperComp(){
 					<Card>
 						<CardContent className={`text-center space-between bg-pink-500`}>
 							<Typography variant="h2">{MaleStudents.length}</Typography>
-							<Typography>TOTAL NUMBER OF MALE STUDENTS</Typography>
+							<Typography>NUMBER OF MALE STUDENTS</Typography>
 						</CardContent>
 					</Card>
 				</SwiperSlide>

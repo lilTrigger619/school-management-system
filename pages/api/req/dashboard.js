@@ -11,11 +11,11 @@ export default async (req, res) => {
     // Getting student data staff data.
     console.log("[Getting Staff basic data] ....");
     console.log("[Getting Student basic data] ....");
-    const StaffRequest = new Req(access, refresh, staffUrl);
+    const StaffRequest = new Req(access, refresh, staffUrl, null, res);
     const StaffResponse = await StaffRequest.get();
     if (StaffResponse.status == 200) {
       console.log("[Getting Staff basic data] Ok");
-      const StudentRequest = new Req(access, refresh, studentUrl);
+      const StudentRequest = new Req(access, refresh, studentUrl, null, res);
       // when the staff request is complete get student data
       const StudentResponse = await StudentRequest.get();
       //response

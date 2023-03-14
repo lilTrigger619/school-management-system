@@ -104,7 +104,7 @@ class Req {
           }
         ); // the request.
 
-        console.log({ResfreshRes : RefreshRes.data});
+        //console.log({ResfreshRes : RefreshRes.data});
 
         this.setAccessToken(RefreshRes.data.access);
         const _res = this.setCookie(this.res); // set access cookie from the res obj

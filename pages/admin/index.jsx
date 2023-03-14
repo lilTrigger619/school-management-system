@@ -31,14 +31,16 @@ import { useRouter } from "next/router";
 import NoticeBoard from "../../components/pages/dashboard/noticeBoard";
 import Context from "../../components/pages/dashboard/Context";
 
-export default function Homepage({ at}) {
+export default function Homepage({ at }) {
   const [greetings, setGreetings] = useState();
   const user = useSelector((state) => state.DashboardData.user);
   const dataArrived = useSelector((state) => state.DashboardData.dataArrived);
   const StaffTableData = useSelector(
     (state) => state.DashboardData.tableData.staffTablewn
   );
-  const StudentTableData = useSelector( (state) => state.DashboardData.tableData.studentTable);
+  const StudentTableData = useSelector(
+    (state) => state.DashboardData.tableData.studentTable
+  );
   const dispatch = useDispatch();
   const TableHead = ["Name", "Email", "Position", "Subject", "Grade", "Status"];
   //after data has arrived from the backend.
@@ -65,9 +67,8 @@ export default function Homepage({ at}) {
         ? "Night"
         : "Day"
     );
-    console.log("this is the homepag" );
+    console.log("this is the homepag");
   }, []);
-
   return (
     <>
       <Layout>
@@ -122,10 +123,12 @@ export default function Homepage({ at}) {
               <Grid item xs={12} sm={6}>
                 {/*Grid to contain userimage and user login details*/}
                 <Card>
-                  <CardContent className={`
+                  <CardContent
+                    className={`
                         flex
                         justify-center
-                      `}>
+                      `}
+                  >
                     <Image
                       src="/001_a.png"
                       width={240}
@@ -141,28 +144,48 @@ export default function Homepage({ at}) {
                 {/*login details: last date of login, last time of login name of device browser name*/}
                 <Card>
                   <CardContent>
-                      <div className="p-6">
+                    <div className="p-6">
                       <div className="flex justify-between">
-                          <Typography variant="body1" gutterBottom>First name :</Typography>
-                        <Typography variant="body1" gutterBottom>{`${user.first_name ? user.first_name : 'Unkown'}`}</Typography>
+                        <Typography variant="body1" gutterBottom>
+                          First name :
+                        </Typography>
+                        <Typography variant="body1" gutterBottom>{`${
+                          user.first_name ? user.first_name : "Unkown"
+                        }`}</Typography>
                       </div>
                       <div className="flex justify-between">
-                          <Typography variant="body1" gutterBottom>Last name :</Typography>
-                        <Typography variant="body1" gutterBottom>{`${user.last_name ? user.last_name : 'Unknown'}`}</Typography>
+                        <Typography variant="body1" gutterBottom>
+                          Last name :
+                        </Typography>
+                        <Typography variant="body1" gutterBottom>{`${
+                          user.last_name ? user.last_name : "Unknown"
+                        }`}</Typography>
                       </div>
                       <div className="flex justify-between">
-                          <Typography variant="body1" gutterBottom>Position:</Typography>
-                        <Typography variant="body1" gutterBottom>{`${user.position ? user.position : 'Unkown'}`}</Typography>
+                        <Typography variant="body1" gutterBottom>
+                          Position:
+                        </Typography>
+                        <Typography variant="body1" gutterBottom>{`${
+                          user.position ? user.position : "Unkown"
+                        }`}</Typography>
                       </div>
                       <div className="flex justify-between">
-                          <Typography variant="body1" gutterBottom>Account-Type:</Typography>
-                          <Typography variant="body1" gutterBottom>Administrator</Typography>
+                        <Typography variant="body1" gutterBottom>
+                          Account-Type:
+                        </Typography>
+                        <Typography variant="body1" gutterBottom>
+                          Administrator
+                        </Typography>
                       </div>
                       <div className="flex justify-between">
-                          <Typography variant="body1" gutterBottom>Last login:</Typography>
-                          <Typography variant="body1" gutterBottom>Unknown</Typography>
+                        <Typography variant="body1" gutterBottom>
+                          Last login:
+                        </Typography>
+                        <Typography variant="body1" gutterBottom>
+                          Unknown
+                        </Typography>
                       </div>
-                          </div>
+                    </div>
                   </CardContent>
                 </Card>
               </Grid>
@@ -173,4 +196,3 @@ export default function Homepage({ at}) {
     </>
   );
 }
-

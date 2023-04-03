@@ -1,41 +1,39 @@
-#Author: Shadrack Opoku
-#Email: shaddyopoku1@gmail.com
-#Phone: 0560451186
-#Nationality: Ghana
+# Appollo
+Appollo is a school management system that is used to manage almost everything a school need to run
+effectively. This is from 
+- staff management
+- student management 
+- account privilages 
+- fees 
+- task / assignments
+- announce
+and others
 
-##The plan
-.............
-
-#Purpose
-This is the ui for the student management system.
-This system is designed to maintain and cater for all the school problems.
-
-It is designed to be able to enhance teaching and learning at home and school.
-
-#Admin content
- The dashboard.
-	columns:
-	1. Welcome user
-	2. Give user the latest news on education via api
-	3. Use color cards to dipict {Total Students, Total Foriegn Student
-    s, Total Chritian Students, Total Muslim students,students owning,
-    Students abscent for more than 3days,}
-    4. The mini-details of the indivial logged in with his / her positi
-    ion.
-    
- The Student Page.
-1. 
+**Table of content**
+1. [About](#about)
+1. [Installation](#installation)
+1. [More](#more)
 
 
+## About.
+As stated above, this project is for managing a school (It can also be modeled and used for other management projects. I guess).
+It is quite huge though and i hope by the time of reading this doc it is almost done or even completely done.
+Please avoid updating all node_packages after installing theme. That might break some of the models in the app.
 
+## Installation.
+To install this project is acutally quite simple. It is **react project (Nextjs)** so it the usual react project installation
+Follow the instractions bellow to install
+1. Clone the repo and navigate to the project directory.
+	`git clone https://github.com/lilTrigger619/school-management-system` && cd school-management-system/
+1. Install required node packages.
+	`npm install`
+	on linux you might have to do a **sudo**
+	`sudo npm install`
+1. Run the application.
+	`npm run dev`
 
-#What it does.
+Then access the project on the url provided.
 
-
-
-
-
-
-
-
-
+## More.
+Again this project is very huge but that's no excuse to stop one from building a project alone.
+Thanks for taking the time to look at my project, hope you are statisfied with this information.

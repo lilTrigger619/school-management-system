@@ -20,7 +20,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { AccountIcon } from "@material-ui/icons";
 import SideBar from "./sideBar";
 import { setSaveUrl } from "./layoutSlice";
-import { useState, useEffect, useLayoutEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import {
   Authenticate,
   de_Authenticate,
@@ -65,7 +65,8 @@ export default function Layout({ children }) {
     return ()=>{clearTimeout(timeoutCallb)};
   }, []); //end of useEffect.
 
-
+  const sidebarRef = useRef();
+  console.log({sidebarRef});
 
   return (
     <>
@@ -88,7 +89,7 @@ export default function Layout({ children }) {
                   <div className="-ml-6 mr-1">
                     <IconButton
                       color="inherit"
-                      onClick={() => setShowMenu(!showMenu)}
+                      onClick={() => sidebarRef.current.toggleSidebar()}
                     >
                       <MenuIcon color="inherit" />
                     </IconButton>
@@ -118,7 +119,7 @@ export default function Layout({ children }) {
             <div className={Classes.appbarMargin} />
 
             <div>
-              <SideBar show={isMobile ? showMenu : true} />
+              <SideBar ref={sidebarRef} />
             </div>
 
             <div className={`${isMobile ? "ml-9" : "ml-40"}`}>

@@ -1,0 +1,31 @@
+import { createSlice } from "@reduxjs/toolkit";
+
+const Slice = createSlice({
+  name: "dashboardSlice",
+  initialState: {
+    tableData: {
+      staffTable: [],
+      studentTable: [],
+    },
+    dataArrived: false,
+    user: "",
+  },
+  reducers: {
+    setStaffTable: (state, action) => {
+      state.tableData.staffTable = action.payload;
+    },
+    setStudentTable: (state, action) => {
+      state.tableData.studentTable = action.payload;
+    },
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
+    setDataArrived: (state, action) => {
+      state.dataArrived = action.payload;
+    },
+  },
+});
+
+export default Slice.reducer;
+export const { setStaffTable, setStudentTable, setUser, setDataArrived } =
+  Slice.actions;

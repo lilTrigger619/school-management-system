@@ -1,0 +1,207 @@
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import { useRef, useState, useEffect } from "react";
+import {useSelector, useDispatch} from "react-redux";
+import {setVerify, setStatus} from "../../login/loginSlice";
+
+export default function StudentForm() {
+  const dispatch = useDispatch();
+  const [Gender, setGender] = useState();
+  const firstName = useRef();
+  const lastName = useRef();
+  const username = useRef();
+  const email = useRef();
+  const phone = useRef();
+  const hometown = useRef();
+  const currentlocation = useRef();
+  const nationality = useRef();
+  const illness = useRef();
+  const allergies = useRef();
+  const disability = useRef();
+  const password = useRef();
+  
+  //redux state.
+  const status = useSelector(state => state.Auth.status);
+
+  /*
+  useEffect(()=>{
+    console.log(" status of authentication", status);
+    return dispatch(setStatus(""))
+  }, [status]);
+  */
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const Body = {
+      user:{
+        first_name: firstName.current.value,
+        last_name: lastName.current.value,
+        username: username.current.value,
+        email: email.current.value,
+        password: password.current.value,
+      },
+      first_name: firstName.current.value,
+      last_name: lastName.current.value,
+      username: username.current.value,
+      email: email.current.value,
+      phone: phone.current.value,
+      hometown: hometown.current.value,
+      location: currentlocation.current.value,
+      nationality: nationality.current.value,
+      illness: illness.current.value,
+      allergies: allergies.current.value,
+      disability: disability.current.value,
+      gender: Gender,
+    }
+    /*
+    try{
+      Axios.post('api/register/registerStudent', JSON.stringify(Body))
+        .then(response=>console.log(response))
+        .catch({response}=>console.log(response));
+    }catch(err){
+      console.log(err);
+    };
+    */
+    console.log(Body);
+    dispatch(setVerify(true));
+  };
+  return (
+    <>
+      <div>
+        <form onSubmit={onSubmit}>
+          {/* first name*/}
+          <TextField
+            ref={firstName}
+            label="first name"
+            onChange={(e) => (firstName.current.value = e.target.value)}
+            name="firstName"
+            required
+          />
+
+          {/* last name*/}
+          <TextField
+            ref={lastName}
+            label="last name"
+            onChange={(e) => (lastName.current.value = e.target.value)}
+            name="lastName"
+            required
+          />
+
+          {/* username */}
+          <TextField
+            ref={username}
+            label="username"
+            onChange={(e) => (username.current.value = e.target.value)}
+            name="username"
+            required
+          />
+
+          {/* email */}
+          <TextField
+            ref={email}
+            label="email"
+            onChange={(e) => (email.current.value = e.target.value)}
+            name="email"
+          />
+
+          {/* phone */}
+          <TextField
+            ref={phone}
+            label="phone number"
+            onChange={(e) => (phone.current.value = e.target.value)}
+            name="phone"
+          />
+
+          {/* hometown */}
+          <TextField
+            ref={hometown}
+            label="Hometown"
+            onChange={(e) => (hometown.current.value = e.target.value)}
+            name="hometown"
+          />
+
+          {/* currentLocation */}
+          <TextField
+            ref={currentlocation}
+            label="current Location"
+            onChange={(e) => (currentlocation.current.value = e.target.value)}
+            name="currentLocation"
+          />
+
+          {/* Nationality */}
+          <TextField
+            ref={nationality}
+            label=" Nationality "
+            onChange={(e) => (nationality.current.value = e.target.value)}
+            name="nationality"
+            required
+          />
+
+          {/* illness */}
+          <TextField
+            ref={illness}
+            label=" Illness "
+            onChange={(e) => (illness.current.value = e.target.value)}
+            name="illness"
+          />
+
+          {/* allergies */}
+          <TextField
+            ref={allergies}
+            label=" allergies "
+            onChange={(e) => (allergies.current.value = e.target.value)}
+            name="allergies"
+          />
+
+          {/* disability */}
+          <TextField
+            ref={disability}
+            label=" disability "
+            onChange={(e) => (disability.current.value = e.target.value)}
+            name="disability"
+          />
+
+          {/* gender */}
+          <div>
+            <div>
+              <Typography>Gender:</Typography>
+            </div>
+            <div>
+              <label htmlfor="male">Male</label>
+              <input
+                type="radio"
+                name="gender"
+                value="male"
+                id="male"
+                onChange={(e) => setGender(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlfor="female">Female</label>
+              <input
+                type="radio"
+                name="gender"
+                value="female"
+                id="female"
+                onChange={(e) => setGender(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Password */}
+          <TextField
+            type="password"
+            ref={password}
+            name="password"
+            label="password"
+            onChange={(e) => (password.current.value = e.target.value)}
+            required
+          />
+
+          <Button type="submit">Submit</Button>
+        </form>
+      </div>
+    </>
+  );
+}
